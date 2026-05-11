@@ -69,14 +69,6 @@ export interface Faction {
   traits: string[];
 }
 
-export interface RewardFeat {
-  id: string;
-  name: string;
-  prerequisite?: string;
-  description: string;
-  mechanics: string[];
-}
-
 export interface FeatMechanic {
   label?: string;
   value?: string;
@@ -117,13 +109,6 @@ export interface BackgroundDetail {
   sections: DetailSection[];
 }
 
-export interface UnsplashImageUrls {
-  raw: string;
-  full: string;
-  regular: string;
-  small: string;
-  thumb: string;
-}
 
 /**
  * BACKGROUND_IMAGE_URLS
