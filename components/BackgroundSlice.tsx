@@ -3,8 +3,9 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Background } from "@/types";
-import { backgroundDetails } from "@/data/background-details";
+import { backgroundDetailCards } from "@/data/background-detail-cards";
 import CovenantContent from "./CovenantContent";
+import BackgroundDetailPanel from "./BackgroundDetailPanel";
 
 interface BackgroundSliceProps {
   background: Background;
@@ -26,12 +27,14 @@ export default function BackgroundSlice({
   index,
 }: BackgroundSliceProps) {
   const isCollapsed = isAnySelected && !isSelected;
-  const [showDetails, setShowDetails] = useState(false);
+  const [showDetailPanel, setShowDetailPanel] = useState(false);
 
-  // Reset detail panel when slice is closed
+  const detailCard = backgroundDetailCards.find((d) => d.id === background.id);
+
+  // Reset panel when slice is closed
   const handleSelect = (id: string) => {
     if (isSelected) {
-      setShowDetails(false);
+      setShowDetailPanel(false);
     }
     onSelect(id);
   };
@@ -175,42 +178,34 @@ export default function BackgroundSlice({
               accentColor={background.textColor}
             />
 
-            {/* ── 详细信息 Toggle ── */}
-            {backgroundDetails[background.id] && (
+            {/* ── 详细信息 Button ── */}
+            {detailCard && (
               <div className="border-t border-covenant-silver/5 px-6 pb-6 md:px-10">
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    setShowDetails((prev) => !prev);
+                    setShowDetailPanel(true);
                   }}
-                  className={`
-                    group flex w-full items-center justify-center gap-3 rounded-xl
-                    border px-6 py-3 transition-all duration-300
-                    ${
-                      showDetails
-                        ? "border-covenant-gold/30 bg-covenant-gold/5"
-                        : "border-covenant-silver/10 bg-covenant-abyss/40 hover:border-covenant-gold/20"
-                    }
-                  `}
+                  className="group relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-xl border border-covenant-gold/20 bg-covenant-gold/[0.04] px-6 py-4 transition-all duration-500 hover:border-covenant-gold/40 hover:bg-covenant-gold/[0.08]"
                 >
-                  <span
-                    className={`font-heading text-sm tracking-[0.15em] transition-colors ${
-                      showDetails ? "text-covenant-gold" : "text-covenant-silver/50 group-hover:text-covenant-silver/70"
-                    }`}
-                  >
+                  {/* Subtle glow on hover */}
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-covenant-gold/[0.06] to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+
+                  <span className="relative z-10 font-heading text-sm tracking-[0.2em] text-covenant-gold/80 transition-colors group-hover:text-covenant-gold">
                     详细信息
                   </span>
+                  <span className="relative z-10 font-body text-xs tracking-wider text-covenant-gold/40">
+                    Detailed Info
+                  </span>
                   <motion.svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 14 14"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
                     fill="none"
-                    animate={{ rotate: showDetails ? 180 : 0 }}
-                    transition={{ duration: 0.3 }}
-                    className={showDetails ? "text-covenant-gold" : "text-covenant-silver/40"}
+                    className="relative z-10 text-covenant-gold/60 transition-transform group-hover:translate-x-0.5"
                   >
                     <path
-                      d="M3 5L7 9L11 5"
+                      d="M6 4L10 8L6 12"
                       stroke="currentColor"
                       strokeWidth="1.5"
                       strokeLinecap="round"
@@ -218,27 +213,19 @@ export default function BackgroundSlice({
                     />
                   </motion.svg>
                 </button>
-
-                {/* ── Detailed content panel ── */}
-                <AnimatePresence initial={false}>
-                  {showDetails && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
-                      className="overflow-hidden"
-                    >
-                      <div className="mt-4 max-h-96 overflow-y-auto rounded-xl border border-covenant-silver/5 bg-covenant-abyss/80 p-6">
-                        <div className="font-body text-sm leading-relaxed text-covenant-silver-dark/80 whitespace-pre-line">
-                          {backgroundDetails[background.id]}
-                        </div>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
               </div>
             )}
+
+            {/* ── Overlay Detail Panel ── */}
+            <AnimatePresence>
+              {showDetailPanel && detailCard && (
+                <BackgroundDetailPanel
+                  detail={detailCard}
+                  accentClass={background.textColor}
+                  onClose={() => setShowDetailPanel(false)}
+                />
+              )}
+            </AnimatePresence>
           </div>
         </motion.div>
       )}

@@ -92,6 +92,28 @@ export interface FeatNode {
   children?: FeatNode[];
 }
 
+// ── Background Detail Panel ──
+
+export interface DetailBlock {
+  type: "lore" | "feature" | "note" | "quote";
+  level?: number;
+  title?: string;
+  text: string;
+  highlights?: string[];
+}
+
+export interface DetailSection {
+  title: string;
+  content: DetailBlock[];
+}
+
+export interface BackgroundDetail {
+  id: string;
+  intro: string;
+ 阵营?: string;
+  sections: DetailSection[];
+}
+
 export interface UnsplashImageUrls {
   raw: string;
   full: string;
