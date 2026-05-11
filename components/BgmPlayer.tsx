@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 
 export default function BgmPlayer() {
   const [muted, setMuted] = useState(false);
+  const [started, setStarted] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
@@ -12,7 +13,21 @@ export default function BgmPlayer() {
     a.loop = true;
     a.volume = 0.25;
     audioRef.current = a;
-    a.play().catch(() => {}); // try autoplay, silently ignore if blocked
+
+    // Try autoplay
+    a.play()
+      .then(() => setStarted(true))
+      .catch(() => {
+        // Autoplay blocked — wait for first user interaction
+        const resume = () => {
+          a.play().then(() => setStarted(true)).catch(() => {});
+          document.removeEventListener("click", resume);
+          document.removeEventListener("keydown", resume);
+        };
+        document.addEventListener("click", resume, { once: true });
+        document.addEventListener("keydown", resume, { once: true });
+      });
+
     return () => { a.pause(); audioRef.current = null; };
   }, []);
 
@@ -21,7 +36,11 @@ export default function BgmPlayer() {
     if (!a) return;
     if (muted) { a.volume = 0.25; setMuted(false); }
     else { a.volume = 0; setMuted(true); }
-  }, [muted]);
+    // Also ensure playback started (user just clicked us)
+    if (!started) {
+      a.play().then(() => setStarted(true)).catch(() => {});
+    }
+  }, [muted, started]);
 
   return (
     <motion.button
@@ -33,14 +52,20 @@ export default function BgmPlayer() {
         fixed bottom-6 right-6 z-50 flex items-center gap-2.5 rounded-full
         border backdrop-blur-xl shadow-lg shadow-black/30
         px-4 py-2.5 transition-all duration-500
-        ${muted
-          ? "border-red-500/30 bg-covenant-abyss/90 text-red-400"
-          : "border-covenant-gold/30 bg-covenant-abyss/90 text-covenant-gold"
+        ${!started
+          ? "border-covenant-silver/30 bg-covenant-abyss/90 text-covenant-silver/40 animate-pulse"
+          : muted
+            ? "border-red-500/30 bg-covenant-abyss/90 text-red-400"
+            : "border-covenant-gold/30 bg-covenant-abyss/90 text-covenant-gold"
         }
       `}
       title={muted ? "取消静音" : "静音"}
     >
-      {muted ? (
+      {!started ? (
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+          <path d="M5.5 4L14.5 9L5.5 14V4Z" fill="currentColor" />
+        </svg>
+      ) : muted ? (
         <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
           <path d="M5.5 4L14.5 9L5.5 14V4Z" fill="currentColor" opacity="0.3" />
           <path d="M2 6L16 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
@@ -59,7 +84,7 @@ export default function BgmPlayer() {
         </>
       )}
       <span className="font-heading text-xs tracking-[0.15em]">
-        {muted ? "静音中" : "BGM"}
+        {!started ? "点击播放" : muted ? "静音中" : "BGM"}
       </span>
     </motion.button>
   );
