@@ -77,6 +77,21 @@ export interface RewardFeat {
   mechanics: string[];
 }
 
+export interface FeatMechanic {
+  label?: string;
+  value?: string;
+}
+
+export interface FeatNode {
+  id: string;
+  title: string;
+  subtitle?: string;
+  prerequisite?: string;
+  description?: string;
+  mechanics?: FeatMechanic[];
+  children?: FeatNode[];
+}
+
 export interface UnsplashImageUrls {
   raw: string;
   full: string;

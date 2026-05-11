@@ -2,11 +2,13 @@
 
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { gameRules, specialRulesSummary, factions, rewardFeats } from "@/data/game-rules";
+import { gameRules, specialRulesSummary, factions } from "@/data/game-rules";
 import { backgrounds } from "@/data/backgrounds";
-import { BACKGROUND_IMAGE_URLS, GameRule, Faction, RewardFeat } from "@/types";
+import { rewardFeatsTree } from "@/data/reward-feats-tree";
+import { BACKGROUND_IMAGE_URLS, GameRule, Faction } from "@/types";
 import CrossScarDecoration from "./CrossScarDecoration";
 import BackgroundSlice from "./BackgroundSlice";
+import RewardFeatsAccordion from "./RewardFeatsAccordion";
 
 type RulesTab = "rules" | "backgrounds" | "factions" | "feats";
 
@@ -164,7 +166,7 @@ export default function RulesSection() {
             <FactionsTabContent key="factions" />
           )}
           {activeTab === "feats" && (
-            <FeatsTabContent key="feats" />
+            <RewardFeatsAccordion key="feats" feats={rewardFeatsTree} />
           )}
         </AnimatePresence>
       </div>
@@ -327,56 +329,3 @@ function FactionCard({ faction, index }: { faction: Faction; index: number }) {
   );
 }
 
-/* ── Feats Tab ── */
-function FeatsTabContent() {
-  return (
-    <TabContentWrapper>
-      <div className="space-y-4">
-        {rewardFeats.map((feat, i) => (
-          <FeatCard key={feat.id} feat={feat} index={i} />
-        ))}
-      </div>
-    </TabContentWrapper>
-  );
-}
-
-function FeatCard({ feat, index }: { feat: RewardFeat; index: number }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.06, duration: 0.4 }}
-      className="group rounded-xl border border-covenant-silver/5 bg-covenant-abyss/60 p-6 backdrop-blur-sm transition-all hover:border-covenant-gold/15 md:p-8"
-    >
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h4 className="font-heading text-lg tracking-[0.12em] text-covenant-silver-light">
-            {feat.name}
-          </h4>
-          {feat.prerequisite && (
-            <span className="mt-1 inline-block rounded-full border border-covenant-gold/15 bg-covenant-gold/5 px-2.5 py-0.5 font-body text-xs text-covenant-gold/60">
-              先决条件：{feat.prerequisite}
-            </span>
-          )}
-        </div>
-        <CrossScarDecoration variant="ornament" className="h-5 w-5 flex-none opacity-30" />
-      </div>
-
-      <p className="mt-4 font-body text-sm leading-relaxed text-covenant-silver-dark">
-        {feat.description}
-      </p>
-
-      <div className="mt-4 space-y-2">
-        {feat.mechanics.map((mech) => (
-          <div
-            key={mech}
-            className="flex items-start gap-2 rounded-lg bg-covenant-midnight/40 px-4 py-2"
-          >
-            <span className="mt-0.5 h-1.5 w-1.5 flex-none rounded-full bg-covenant-gold/50" />
-            <span className="font-body text-xs text-covenant-silver/60">{mech}</span>
-          </div>
-        ))}
-      </div>
-    </motion.div>
-  );
-}
