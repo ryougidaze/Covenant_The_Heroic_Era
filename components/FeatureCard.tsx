@@ -118,7 +118,7 @@ function DetailGrid({ details }: { details: AbilityDetail[] }) {
           key={d.label}
           className="inline-flex items-center gap-1.5 rounded-full border border-covenant-gold/15 bg-covenant-gold/5 px-3 py-1.5"
         >
-          <span className="font-heading text-[10px] tracking-wider text-covenant-gold/60">
+          <span className="font-heading text-[0.625rem] tracking-wider text-covenant-gold/60">
             {d.label}
           </span>
           <span className="font-body text-xs text-covenant-gold/80">{d.value}</span>

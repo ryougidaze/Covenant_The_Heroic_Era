@@ -91,7 +91,7 @@ export default function Navigation() {
                   </span>
                   <span
                     className={`
-                      relative z-10 ml-2 hidden font-body text-[10px] tracking-wider md:inline
+                      relative z-10 ml-2 hidden font-body text-[0.625rem] tracking-wider md:inline
                       ${isActive ? "text-covenant-gold/60" : "text-covenant-silver/20"}
                     `}
                   >

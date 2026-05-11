@@ -7,9 +7,16 @@
 }
 
 html {
+  font-size: 18px;              /* +12.5% base (mobile) */
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 24px;            /* +50% base (desktop) — all Tailwind rem units scale */
+  }
 }
 
 body {
