@@ -1,6 +1,15 @@
+export interface AbilityDetail {
+  label: string;   // e.g. "施法距离", "施法时间", "持续时间", "使用次数"
+  value: string;
+}
+
 export interface BackgroundFeature {
   title: string;
+  level: number;
+  icon: string;
+  summary: string;
   description: string;
+  details?: AbilityDetail[];
 }
 
 export interface LevelTier {
