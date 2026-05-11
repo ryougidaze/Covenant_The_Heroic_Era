@@ -1,7 +1,9 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Background } from "@/types";
+import { backgroundDetails } from "@/data/background-details";
 import CovenantContent from "./CovenantContent";
 
 interface BackgroundSliceProps {
@@ -24,11 +26,20 @@ export default function BackgroundSlice({
   index,
 }: BackgroundSliceProps) {
   const isCollapsed = isAnySelected && !isSelected;
+  const [showDetails, setShowDetails] = useState(false);
+
+  // Reset detail panel when slice is closed
+  const handleSelect = (id: string) => {
+    if (isSelected) {
+      setShowDetails(false);
+    }
+    onSelect(id);
+  };
 
   return (
     <motion.div
       layout
-      onClick={() => onSelect(background.id)}
+      onClick={() => handleSelect(background.id)}
       onMouseEnter={() => onHover?.(background.id)}
       onMouseLeave={() => onLeave?.()}
       transition={{
@@ -163,6 +174,71 @@ export default function BackgroundSlice({
               levelTiers={background.levelTiers}
               accentColor={background.textColor}
             />
+
+            {/* ── 详细信息 Toggle ── */}
+            {backgroundDetails[background.id] && (
+              <div className="border-t border-covenant-silver/5 px-6 pb-6 md:px-10">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowDetails((prev) => !prev);
+                  }}
+                  className={`
+                    group flex w-full items-center justify-center gap-3 rounded-xl
+                    border px-6 py-3 transition-all duration-300
+                    ${
+                      showDetails
+                        ? "border-covenant-gold/30 bg-covenant-gold/5"
+                        : "border-covenant-silver/10 bg-covenant-abyss/40 hover:border-covenant-gold/20"
+                    }
+                  `}
+                >
+                  <span
+                    className={`font-heading text-sm tracking-[0.15em] transition-colors ${
+                      showDetails ? "text-covenant-gold" : "text-covenant-silver/50 group-hover:text-covenant-silver/70"
+                    }`}
+                  >
+                    详细信息
+                  </span>
+                  <motion.svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 14 14"
+                    fill="none"
+                    animate={{ rotate: showDetails ? 180 : 0 }}
+                    transition={{ duration: 0.3 }}
+                    className={showDetails ? "text-covenant-gold" : "text-covenant-silver/40"}
+                  >
+                    <path
+                      d="M3 5L7 9L11 5"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </motion.svg>
+                </button>
+
+                {/* ── Detailed content panel ── */}
+                <AnimatePresence initial={false}>
+                  {showDetails && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+                      className="overflow-hidden"
+                    >
+                      <div className="mt-4 max-h-96 overflow-y-auto rounded-xl border border-covenant-silver/5 bg-covenant-abyss/80 p-6">
+                        <div className="font-body text-sm leading-relaxed text-covenant-silver-dark/80 whitespace-pre-line">
+                          {backgroundDetails[background.id]}
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            )}
           </div>
         </motion.div>
       )}

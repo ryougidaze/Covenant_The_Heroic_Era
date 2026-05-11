@@ -30,6 +30,7 @@ export interface Background {
   description: string;
   features: BackgroundFeature[];
   levelTiers: LevelTier[];
+  detailedContent?: string;  // full document text for the "详细信息" panel
 }
 
 // ── World Lore ──
