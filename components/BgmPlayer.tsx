@@ -7,92 +7,93 @@ export default function BgmPlayer() {
   const [muted, setMuted] = useState(false);
   const [started, setStarted] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const mutedRef = useRef(false);
 
+  // Start playback on mount or first user interaction
   useEffect(() => {
-    const a = new Audio("/assets/bgm.wav");
-    a.loop = true;
-    a.volume = 0.25;
-    audioRef.current = a;
+    const el = audioRef.current;
+    if (!el) return;
 
-    a.play()
-      .then(() => setStarted(true))
-      .catch(() => {
-        const resume = () => {
-          a.play().then(() => setStarted(true)).catch(() => {});
-        };
-        document.addEventListener("click", resume, { once: true });
-        document.addEventListener("keydown", resume, { once: true });
-      });
+    const start = () => {
+      el.volume = 0.25;
+      el.play()
+        .then(() => setStarted(true))
+        .catch(() => {});
+    };
 
-    return () => { a.pause(); audioRef.current = null; };
+    start();
+    // If autoplay fails, resume on first interaction anywhere
+    const resume = () => { start(); };
+    document.addEventListener("click", resume, { once: true });
+    document.addEventListener("keydown", resume, { once: true });
+    return () => {
+      document.removeEventListener("click", resume);
+      document.removeEventListener("keydown", resume);
+    };
   }, []);
 
   const toggleMute = () => {
-    const a = audioRef.current;
-    if (!a) return;
+    const el = audioRef.current;
+    if (!el) return;
 
-    // Ensure started
+    // Start if needed
     if (!started) {
-      a.play().then(() => setStarted(true)).catch(() => {});
+      el.volume = 0.25;
+      el.play().then(() => setStarted(true)).catch(() => {});
     }
 
-    // Toggle mute using ref for reliability
-    if (mutedRef.current) {
-      a.volume = 0.25;
-      mutedRef.current = false;
-      setMuted(false);
-    } else {
-      a.volume = 0;
-      mutedRef.current = true;
-      setMuted(true);
-    }
+    // Toggle
+    el.muted = !el.muted;
+    setMuted(el.muted);
   };
 
   return (
-    <motion.button
-      initial={{ opacity: 0, scale: 0.8 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ delay: 1 }}
-      onClick={toggleMute}
-      className={`
-        fixed bottom-6 right-6 z-50 flex items-center gap-2.5 rounded-full
-        border backdrop-blur-xl shadow-lg shadow-black/30
-        px-4 py-2.5 transition-all duration-500
-        ${!started
-          ? "border-covenant-silver/30 bg-covenant-abyss/90 text-covenant-silver/40 animate-pulse"
-          : muted
-            ? "border-red-500/30 bg-covenant-abyss/90 text-red-400"
-            : "border-covenant-gold/30 bg-covenant-abyss/90 text-covenant-gold"
-        }
-      `}
-      title={muted ? "取消静音" : "静音"}
-    >
-      {!started ? (
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-          <path d="M5.5 4L14.5 9L5.5 14V4Z" fill="currentColor" />
-        </svg>
-      ) : muted ? (
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-          <path d="M5.5 4L14.5 9L5.5 14V4Z" fill="currentColor" opacity="0.3" />
-          <path d="M2 6L16 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-          <path d="M16 6L2 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-        </svg>
-      ) : (
-        <>
-          {[0, 1, 2].map((i) => (
-            <motion.div
-              key={i}
-              className="w-[3px] rounded-full bg-current"
-              animate={{ height: [8, 14, 6, 12, 8][i] ?? 10 }}
-              transition={{ duration: 1 + i * 0.2, repeat: Infinity, ease: "easeInOut", delay: i * 0.15 }}
-            />
-          ))}
-        </>
-      )}
-      <span className="font-heading text-xs tracking-[0.15em]">
-        {!started ? "点击播放" : muted ? "静音中" : "BGM"}
-      </span>
-    </motion.button>
+    <>
+      <audio ref={audioRef} src="/assets/bgm.wav" loop preload="auto" />
+
+      <motion.button
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 1 }}
+        onClick={toggleMute}
+        className={`
+          fixed bottom-6 right-6 z-50 flex items-center gap-2.5 rounded-full
+          border backdrop-blur-xl shadow-lg shadow-black/30
+          px-4 py-2.5 transition-all duration-500
+          ${!started
+            ? "border-covenant-silver/30 bg-covenant-abyss/90 text-covenant-silver/40 animate-pulse"
+            : muted
+              ? "border-red-500/30 bg-covenant-abyss/90 text-red-400"
+              : "border-covenant-gold/30 bg-covenant-abyss/90 text-covenant-gold"
+          }
+        `}
+        title={muted ? "取消静音" : "静音"}
+      >
+        {!started ? (
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+            <path d="M5.5 4L14.5 9L5.5 14V4Z" fill="currentColor" />
+          </svg>
+        ) : muted ? (
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+            <path d="M5.5 4L14.5 9L5.5 14V4Z" fill="currentColor" opacity="0.3" />
+            <path d="M2 6L16 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            <path d="M16 6L2 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          </svg>
+        ) : (
+          <>
+            {[0, 1, 2].map((i) => (
+              <motion.div
+                key={i}
+                className="w-[3px] rounded-full bg-current"
+                animate={{ height: [8, 14, 6, 12, 8][i] ?? 10 }}
+                transition={{ duration: 1 + i * 0.2, repeat: Infinity, ease: "easeInOut", delay: i * 0.15 }}
+              />
+            ))}
+          </>
+        )}
+        <span className="font-heading text-xs tracking-[0.15em]">
+          {!started ? "点击播放" : muted ? "静音中" : "BGM"}
+        </span>
+      </motion.button>
+    </>
   );
 }
