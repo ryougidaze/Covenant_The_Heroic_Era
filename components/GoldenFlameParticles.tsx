@@ -1,17 +1,18 @@
 "use client";
 
-import { useEffect, useRef, useMemo } from "react";
+import { useMemo } from "react";
 import { motion } from "framer-motion";
 
 interface FlameParticle {
   id: number;
-  x: number;       // horizontal offset (%)
-  yStart: number;  // start Y (%)
-  size: number;    // particle size (px)
-  opacity: number; // base opacity
-  duration: number; // animation duration (s)
-  delay: number;   // animation delay (s)
-  drift: number;   // horizontal drift (px)
+  offset: number;   // horizontal offset from side edge (%)
+  bottom: number;   // starting bottom (%)
+  size: number;     // particle size (px)
+  duration: number; // rise duration (s)
+  delay: number;    // stagger delay (s)
+  drift: number;    // horizontal sway (px)
+  riseBy: number;   // how far up it travels (px)
+  maxOpacity: number;
 }
 
 interface GoldenFlameParticlesProps {
@@ -28,26 +29,21 @@ export default function GoldenFlameParticles({
     for (let i = 0; i < particleCount; i++) {
       items.push({
         id: i,
-        x: Math.random() * 18 + 1,    // 1-19% from edge
-        yStart: 60 + Math.random() * 40, // start 60-100% from top
-        size: Math.random() * 3 + 1.5,   // 1.5-4.5px
-        opacity: Math.random() * 0.35 + 0.1, // 0.1-0.45
-        duration: Math.random() * 4 + 3,     // 3-7s
-        delay: Math.random() * 3,            // 0-3s
-        drift: (Math.random() - 0.5) * 20,   // ±10px
+        offset: Math.random() * 16 + 2,         // 2–18% from side edge
+        bottom: Math.random() * 100,              // start anywhere along height
+        size: Math.random() * 2.5 + 1.5,          // 1.5–4px
+        duration: Math.random() * 4 + 4,          // 4–8s rise
+        delay: Math.random() * 5,                 // 0–5s stagger
+        drift: (Math.random() - 0.5) * 40,        // ±20px sway
+        riseBy: 80 + Math.random() * 200,          // travel 80–280px upward
+        maxOpacity: Math.random() * 0.35 + 0.1,    // 0.1–0.45
       });
     }
     return items;
   }, [particleCount]);
 
   return (
-    <div
-      className="pointer-events-none absolute inset-y-0 overflow-hidden"
-      style={{
-        [side]: 0,
-        width: "20%",
-      }}
-    >
+    <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
       {particles.map((p) => (
         <motion.div
           key={p.id}
@@ -55,51 +51,51 @@ export default function GoldenFlameParticles({
           style={{
             width: p.size,
             height: p.size,
-            left: `${p.x}%`,
-            bottom: 0,
+            [side]: `${p.offset}%`,
+            bottom: `${p.bottom}%`,
             background:
               "radial-gradient(circle, rgba(212,176,106,0.9) 0%, rgba(197,160,89,0.6) 40%, transparent 70%)",
-            boxShadow: `0 0 ${p.size * 3}px rgba(197,160,89,0.5), 0 0 ${p.size * 6}px rgba(197,160,89,0.2)`,
+            boxShadow: `0 0 ${p.size * 3}px rgba(197,160,89,0.5), 0 0 ${p.size * 6}px rgba(197,160,89,0.15)`,
           }}
           animate={{
-            y: [0, -(p.yStart + Math.random() * 20) + "%"],
-            x: [0, p.drift, -p.drift, 0],
-            opacity: [0, p.opacity, p.opacity * 1.5, 0],
-            scale: [0.5, 1, 0.8, 0],
+            y: [0, -p.riseBy * 0.4, -p.riseBy],
+            x: [0, p.drift * 0.5, -p.drift * 0.5, p.drift * 0.3, 0],
+            opacity: [0, p.maxOpacity, p.maxOpacity * 1.3, p.maxOpacity * 0.5, 0],
+            scale: [0.3, 0.6, 1, 0.7, 0],
           }}
           transition={{
             duration: p.duration,
             delay: p.delay,
             repeat: Infinity,
             ease: "easeOut",
-            times: [0, 0.3, 0.7, 1],
+            times: [0, 0.15, 0.4, 0.7, 1],
           }}
         />
       ))}
 
       {/* ── Larger "ember" particles ── */}
-      {Array.from({ length: 8 }).map((_, i) => (
+      {Array.from({ length: 10 }).map((_, i) => (
         <motion.div
           key={`ember-${i}`}
-          className="absolute rounded-full blur-[1px]"
+          className="absolute rounded-full"
           style={{
             width: 2 + Math.random() * 3,
             height: 2 + Math.random() * 3,
-            left: `${Math.random() * 14 + 3}%`,
-            bottom: 0,
+            [side]: `${Math.random() * 14 + 3}%`,
+            bottom: `${Math.random() * 100}%`,
             background:
               "radial-gradient(circle, rgba(212,176,106,1) 0%, rgba(197,160,89,0.7) 50%, transparent 100%)",
-            boxShadow: "0 0 8px rgba(197,160,89,0.7), 0 0 16px rgba(197,160,89,0.3)",
+            boxShadow: "0 0 8px rgba(197,160,89,0.7), 0 0 16px rgba(197,160,89,0.25)",
           }}
           animate={{
-            y: [0, "-120%"],
-            x: [0, (Math.random() - 0.5) * 30],
-            opacity: [0, 0.6, 0.8, 0],
+            y: [0, -60 - Math.random() * 120],
+            x: [0, (Math.random() - 0.5) * 50, 0],
+            opacity: [0, 0.5, 0.7, 0],
             scale: [0.3, 1.2, 0.6, 0],
           }}
           transition={{
             duration: 5 + Math.random() * 4,
-            delay: i * 0.7 + Math.random(),
+            delay: i * 0.7 + Math.random() * 2,
             repeat: Infinity,
             ease: "easeOut",
             times: [0, 0.2, 0.6, 1],
@@ -107,12 +103,13 @@ export default function GoldenFlameParticles({
         />
       ))}
 
-      {/* ── Base glow on the bottom edge ── */}
+      {/* ── Base glow along bottom edge ── */}
       <div
-        className="absolute bottom-0 w-full h-32"
+        className="absolute bottom-0 h-40"
         style={{
-          background: `linear-gradient(180deg, transparent 0%, rgba(197,160,89,0.04) 60%, rgba(197,160,89,0.1) 100%)`,
           [side]: 0,
+          width: "20%",
+          background: `linear-gradient(180deg, transparent 0%, rgba(197,160,89,0.03) 50%, rgba(197,160,89,0.08) 100%)`,
         }}
       />
     </div>
