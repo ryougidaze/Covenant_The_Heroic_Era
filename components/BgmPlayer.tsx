@@ -48,7 +48,7 @@ export default function BgmPlayer() {
 
   return (
     <>
-      <audio ref={audioRef} src="/assets/Sliver Night City (Ins).mp3" loop preload="auto" />
+      <audio ref={audioRef} src="/assets/sliver-night-city-ins.mp3" loop preload="auto" />
 
       <motion.button
         initial={{ opacity: 0, scale: 0.8 }}
