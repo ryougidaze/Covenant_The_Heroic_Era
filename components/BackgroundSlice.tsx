@@ -169,17 +169,8 @@ export default function BackgroundSlice({
             </div>
           </div>
 
-          {/* Scrollable content */}
-          <div className="flex-1 overflow-y-auto">
-            <CovenantContent
-              features={background.features}
-              levelTiers={background.levelTiers}
-              accentColor={background.textColor}
-            />
-          </div>
-
-          {/* ── Detail button — pinned at bottom ── */}
-          <div className="flex-none border-t border-covenant-silver/10 px-6 py-4 md:px-10">
+          {/* ── Detail button — visible immediately ── */}
+          <div className="flex-none border-b border-covenant-silver/5 px-6 py-4 md:px-10">
             <button
               onClick={(e) => {
                 e.stopPropagation();
@@ -187,12 +178,8 @@ export default function BackgroundSlice({
               }}
               className="group relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-xl border-2 border-covenant-gold/30 bg-gradient-to-r from-covenant-gold/10 to-covenant-gold/5 px-6 py-4 transition-all duration-500 hover:border-covenant-gold/50 hover:from-covenant-gold/20 hover:to-covenant-gold/10 active:scale-[0.98]"
             >
-              {/* Shimmer sweep */}
               <div className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/[0.04] to-transparent transition-transform duration-700 group-hover:translate-x-full" />
-
-              {/* Cross-scar icon */}
               <CrossScarOrnamentSmall />
-
               <span className="relative z-10 font-heading text-base tracking-[0.2em] text-covenant-gold">
                 详细信息
               </span>
@@ -217,6 +204,15 @@ export default function BackgroundSlice({
                 />
               </motion.svg>
             </button>
+          </div>
+
+          {/* Scrollable content */}
+          <div className="flex-1 overflow-y-auto">
+            <CovenantContent
+              features={background.features}
+              levelTiers={background.levelTiers}
+              accentColor={background.textColor}
+            />
           </div>
         </motion.div>
       )}
