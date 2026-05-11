@@ -1,11 +1,17 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { worldLore } from "@/data/world-lore";
 import { LoreSection as LoreSectionType, LoreChapter } from "@/types";
 import CrossScarDecoration from "./CrossScarDecoration";
 
 export default function IntroductionSection() {
+  const [openSectionId, setOpenSectionId] = useState<string | null>(null);
+
+  const toggleSection = (id: string) => {
+    setOpenSectionId((prev) => (prev === id ? null : id));
+  };
 
   return (
     <section
@@ -19,7 +25,6 @@ export default function IntroductionSection() {
 
       {/* ── Hero Header ── */}
       <div className="relative flex min-h-screen flex-col items-center justify-center px-6 py-20 text-center">
-        {/* Floating ornament */}
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -89,47 +94,102 @@ export default function IntroductionSection() {
         </motion.div>
       </div>
 
-      {/* ── Lore Chapters ── */}
-      <div className="mx-auto max-w-5xl px-6 pb-32">
-        {worldLore.map((section, sIdx) => (
-          <LoreSectionBlock key={section.id} section={section} index={sIdx} />
-        ))}
+      {/* ── Horizontal Accordion: Lore Sections ── */}
+      <div className="mx-auto max-w-6xl px-6 pb-32">
+        {/* Section title tabs — horizontal row */}
+        <div className="mb-2 flex flex-wrap justify-center gap-2 md:gap-3">
+          {worldLore.map((section) => {
+            const isOpen = openSectionId === section.id;
+            return (
+              <button
+                key={section.id}
+                onClick={() => toggleSection(section.id)}
+                className={`
+                  group relative rounded-full px-5 py-2.5 font-heading text-sm tracking-[0.15em] transition-all duration-300 md:px-7 md:py-3 md:text-base
+                  ${
+                    isOpen
+                      ? "text-covenant-silver-light"
+                      : "text-covenant-silver/40 hover:text-covenant-silver/70"
+                  }
+                `}
+              >
+                {/* Active background pill */}
+                {isOpen && (
+                  <motion.div
+                    layoutId="lore-tab-bg"
+                    className="absolute inset-1 rounded-full border border-covenant-gold/20 bg-covenant-gold/8"
+                    transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
+                  />
+                )}
+                <span className="relative z-10 flex items-center gap-2">
+                  {/* Collapsed indicator dot */}
+                  {!isOpen && (
+                    <span className="h-1.5 w-1.5 rounded-full bg-covenant-silver/20 transition-colors group-hover:bg-covenant-gold/50" />
+                  )}
+                  {isOpen && (
+                    <span className="h-1.5 w-1.5 rounded-full bg-covenant-gold/80 shadow-[0_0_6px_rgba(197,160,89,0.5)]" />
+                  )}
+                  {section.title}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Divider under tabs */}
+        <div className="mb-10">
+          <CrossScarDecoration variant="divider" className="w-full opacity-50" />
+        </div>
+
+        {/* Expanded section content */}
+        <AnimatePresence mode="wait">
+          {openSectionId && (
+            <LoreSectionContent
+              key={openSectionId}
+              section={worldLore.find((s) => s.id === openSectionId)!}
+            />
+          )}
+        </AnimatePresence>
+
+        {/* Empty state — when nothing is open */}
+        {!openSectionId && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="py-20 text-center"
+          >
+            <p className="font-body text-base text-covenant-silver/25">
+              点击上方主题以探索世界观
+            </p>
+          </motion.div>
+        )}
       </div>
     </section>
   );
 }
 
-/* ── Single Lore Section Block ── */
-function LoreSectionBlock({
-  section,
-  index,
-}: {
-  section: LoreSectionType;
-  index: number;
-}) {
+/* ── Expanded Lore Section Content ── */
+function LoreSectionContent({ section }: { section: LoreSectionType }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 0.7, delay: index * 0.1, ease: "easeOut" }}
-      className="mb-20"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
     >
-      {/* Section header */}
-      <div className="mb-10 flex items-center gap-4">
+      {/* Section title */}
+      <div className="mb-8 flex items-center gap-4">
         <CrossScarDecoration variant="ornament" className="h-8 w-8 flex-none" />
-        <div>
-          <h2 className="font-heading text-2xl tracking-[0.2em] text-covenant-silver-light md:text-3xl">
-            {section.title}
-          </h2>
-        </div>
+        <h2 className="font-heading text-2xl tracking-[0.2em] text-covenant-silver-light md:text-3xl">
+          {section.title}
+        </h2>
         <div className="ml-auto h-px flex-1 bg-gradient-to-l from-transparent to-covenant-silver/10" />
       </div>
 
-      {/* Chapter cards */}
+      {/* Chapter cards grid */}
       <div className="grid gap-6 md:grid-cols-2">
-        {section.chapters.map((chapter) => (
-          <ChapterCard key={chapter.id} chapter={chapter} />
+        {section.chapters.map((chapter, i) => (
+          <ChapterCard key={chapter.id} chapter={chapter} index={i} />
         ))}
       </div>
     </motion.div>
@@ -137,9 +197,18 @@ function LoreSectionBlock({
 }
 
 /* ── Single Chapter Card ── */
-function ChapterCard({ chapter }: { chapter: LoreChapter }) {
+function ChapterCard({
+  chapter,
+  index,
+}: {
+  chapter: LoreChapter;
+  index: number;
+}) {
   return (
     <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.06, duration: 0.4, ease: "easeOut" }}
       whileHover={{ y: -2 }}
       className="group rounded-xl border border-covenant-silver/5 bg-covenant-abyss/60 p-6 backdrop-blur-sm transition-all hover:border-covenant-gold/15 md:p-8"
     >
