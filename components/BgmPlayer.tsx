@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 
 export default function BgmPlayer() {
   const [muted, setMuted] = useState(false);
   const [started, setStarted] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const mutedRef = useRef(false);
 
   useEffect(() => {
     const a = new Audio("/assets/bgm.wav");
@@ -14,15 +15,11 @@ export default function BgmPlayer() {
     a.volume = 0.25;
     audioRef.current = a;
 
-    // Try autoplay
     a.play()
       .then(() => setStarted(true))
       .catch(() => {
-        // Autoplay blocked — wait for first user interaction
         const resume = () => {
           a.play().then(() => setStarted(true)).catch(() => {});
-          document.removeEventListener("click", resume);
-          document.removeEventListener("keydown", resume);
         };
         document.addEventListener("click", resume, { once: true });
         document.addEventListener("keydown", resume, { once: true });
@@ -31,16 +28,26 @@ export default function BgmPlayer() {
     return () => { a.pause(); audioRef.current = null; };
   }, []);
 
-  const toggleMute = useCallback(() => {
+  const toggleMute = () => {
     const a = audioRef.current;
     if (!a) return;
-    if (muted) { a.volume = 0.25; setMuted(false); }
-    else { a.volume = 0; setMuted(true); }
-    // Also ensure playback started (user just clicked us)
+
+    // Ensure started
     if (!started) {
       a.play().then(() => setStarted(true)).catch(() => {});
     }
-  }, [muted, started]);
+
+    // Toggle mute using ref for reliability
+    if (mutedRef.current) {
+      a.volume = 0.25;
+      mutedRef.current = false;
+      setMuted(false);
+    } else {
+      a.volume = 0;
+      mutedRef.current = true;
+      setMuted(true);
+    }
+  };
 
   return (
     <motion.button
