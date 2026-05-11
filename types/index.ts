@@ -23,6 +23,50 @@ export interface Background {
   levelTiers: LevelTier[];
 }
 
+// ── World Lore ──
+
+export interface LoreChapter {
+  id: string;
+  title: string;
+  subtitle?: string;
+  summary: string;
+  paragraphs: string[];
+  highlight?: string;
+}
+
+export interface LoreSection {
+  id: string;
+  title: string;
+  chapters: LoreChapter[];
+}
+
+// ── Game Rules ──
+
+export interface GameRule {
+  id: string;
+  title: string;
+  icon: string;
+  description: string;
+  detail?: string;
+}
+
+export interface Faction {
+  id: string;
+  name: string;
+  region: string;
+  color: string;
+  description: string;
+  traits: string[];
+}
+
+export interface RewardFeat {
+  id: string;
+  name: string;
+  prerequisite?: string;
+  description: string;
+  mechanics: string[];
+}
+
 export interface UnsplashImageUrls {
   raw: string;
   full: string;

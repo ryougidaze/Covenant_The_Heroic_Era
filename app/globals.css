@@ -15,7 +15,7 @@ html {
 body {
   background-color: #080C14;
   color: #D8E0E8;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 /* ── Custom scrollbar ── */

@@ -1,0 +1,355 @@
+"use client";
+
+import { useState, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { gameRules, specialRulesSummary, factions, rewardFeats } from "@/data/game-rules";
+import { backgrounds } from "@/data/backgrounds";
+import { BACKGROUND_IMAGE_URLS, GameRule, Faction, RewardFeat } from "@/types";
+import CrossScarDecoration from "./CrossScarDecoration";
+import BackgroundSlice from "./BackgroundSlice";
+
+type RulesTab = "rules" | "backgrounds" | "factions" | "feats";
+
+interface TabDef {
+  id: RulesTab;
+  label: string;
+}
+
+const TABS: TabDef[] = [
+  { id: "rules", label: "游戏规则" },
+  { id: "backgrounds", label: "额外背景" },
+  { id: "factions", label: "势力划分" },
+  { id: "feats", label: "奖励专长" },
+];
+
+export default function RulesSection() {
+  const [activeTab, setActiveTab] = useState<RulesTab>("rules");
+  const [selectedBgId, setSelectedBgId] = useState<string | null>(null);
+
+  const handleBgSelect = useCallback((id: string) => {
+    setSelectedBgId((prev) => (prev === id ? null : id));
+  }, []);
+
+  const selectedBg = selectedBgId
+    ? backgrounds.find((b) => b.id === selectedBgId) ?? null
+    : null;
+  const bgUrl =
+    selectedBg && BACKGROUND_IMAGE_URLS[selectedBg.id]
+      ? BACKGROUND_IMAGE_URLS[selectedBg.id]
+      : null;
+
+  return (
+    <section
+      id="section-rules"
+      className="relative min-h-screen bg-covenant-void"
+    >
+      {/* Dynamic background image */}
+      <AnimatePresence mode="wait">
+        {bgUrl && activeTab === "backgrounds" && (
+          <motion.div
+            key={selectedBg!.id}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8 }}
+            className="fixed inset-0 z-0"
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={bgUrl}
+              alt=""
+              className="h-full w-full object-cover"
+              loading="eager"
+            />
+            <div className="absolute inset-0 bg-covenant-void/80 backdrop-blur-[2px]" />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(30,58,110,0.15)_0%,_transparent_70%)]" />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Default bg when no selection or not on backgrounds tab */}
+      {(!bgUrl || activeTab !== "backgrounds") && (
+        <div className="fixed inset-0 -z-10 bg-covenant-void">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(30,58,110,0.1)_0%,_transparent_70%)]" />
+        </div>
+      )}
+
+      <div className="relative z-10">
+      {/* ── Section Header ── */}
+      <div className="mx-auto max-w-7xl px-6 pb-6 pt-24 md:pt-32">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center"
+        >
+          <CrossScarDecoration variant="ornament" className="mx-auto mb-4 h-10 w-10" />
+          <h2 className="font-heading text-3xl tracking-[0.2em] text-covenant-silver-light md:text-4xl">
+            圣约 D&D 模组
+          </h2>
+          <p className="mt-2 font-body text-sm tracking-[0.3em] text-covenant-gold/50">
+            RULES &amp; MECHANICS
+          </p>
+        </motion.div>
+
+        {/* ── Tab Bar ── */}
+        <div className="mt-10 flex justify-center">
+          <div className="inline-flex flex-wrap justify-center gap-1 rounded-full border border-covenant-silver/10 bg-covenant-abyss/60 p-1 backdrop-blur-sm">
+            {TABS.map((tab) => {
+              const isActive = activeTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`
+                    relative rounded-full px-4 py-2 text-sm font-heading tracking-[0.15em] transition-all
+                    ${
+                      isActive
+                        ? "text-covenant-silver-light"
+                        : "text-covenant-silver/40 hover:text-covenant-silver/60"
+                    }
+                  `}
+                >
+                  {isActive && (
+                    <motion.div
+                      layoutId="rules-tab-bg"
+                      className="absolute inset-1 rounded-full border border-covenant-gold/15 bg-covenant-gold/8"
+                      transition={{ duration: 0.3, ease: "easeOut" }}
+                    />
+                  )}
+                  <span className="relative z-10">{tab.label}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* ── Tab Content ── */}
+      <div className="mx-auto max-w-7xl px-6 pb-32">
+        <AnimatePresence mode="wait">
+          {activeTab === "rules" && (
+            <RulesTabContent key="rules" />
+          )}
+          {activeTab === "backgrounds" && (
+            <BackgroundsTabContent
+              key="backgrounds"
+              selectedBgId={selectedBgId}
+              onSelectBg={handleBgSelect}
+            />
+          )}
+          {activeTab === "factions" && (
+            <FactionsTabContent key="factions" />
+          )}
+          {activeTab === "feats" && (
+            <FeatsTabContent key="feats" />
+          )}
+        </AnimatePresence>
+      </div>
+
+      </div>{/* close relative z-10 */}
+    </section>
+  );
+}
+
+/* ──────────── Tab Content Components ──────────── */
+
+function TabContentWrapper({ children }: { children: React.ReactNode }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.35, ease: "easeOut" }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+/* ── Rules Tab ── */
+function RulesTabContent() {
+  return (
+    <TabContentWrapper>
+      <div className="mb-8 text-center">
+        <h3 className="font-heading text-xl tracking-[0.15em] text-covenant-silver">
+          {specialRulesSummary.title}
+        </h3>
+        <p className="mt-2 font-body text-sm text-covenant-silver-dark">
+          {specialRulesSummary.description}
+        </p>
+      </div>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {gameRules.map((rule, i) => (
+          <RuleCard key={rule.id} rule={rule} index={i} />
+        ))}
+      </div>
+    </TabContentWrapper>
+  );
+}
+
+function RuleCard({ rule, index }: { rule: GameRule; index: number }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.06, duration: 0.4 }}
+      className="group rounded-xl border border-covenant-silver/5 bg-covenant-abyss/60 p-6 backdrop-blur-sm transition-all hover:border-covenant-gold/15"
+    >
+      <div className="mb-3 flex items-center gap-3">
+        <span className="flex h-10 w-10 items-center justify-center rounded-full border border-covenant-silver/10 bg-covenant-midnight text-lg">
+          {rule.icon}
+        </span>
+        <h4 className="font-heading text-base tracking-[0.12em] text-covenant-silver-light">
+          {rule.title}
+        </h4>
+      </div>
+      <p className="font-body text-sm leading-relaxed text-covenant-silver-dark">
+        {rule.description}
+      </p>
+      {rule.detail && (
+        <div className="mt-3 border-t border-covenant-silver/5 pt-3">
+          <p className="font-body text-xs leading-relaxed text-covenant-silver/40 italic">
+            {rule.detail}
+          </p>
+        </div>
+      )}
+    </motion.div>
+  );
+}
+
+/* ── Backgrounds Tab ── */
+function BackgroundsTabContent({
+  selectedBgId,
+  onSelectBg,
+}: {
+  selectedBgId: string | null;
+  onSelectBg: (id: string) => void;
+}) {
+  return (
+    <TabContentWrapper>
+      <div className="overflow-hidden rounded-xl border border-covenant-silver/5">
+        <div className="flex h-[60vh] md:h-[70vh] md:flex-row max-md:flex-col">
+          {backgrounds.map((bg, i) => (
+            <BackgroundSlice
+              key={bg.id}
+              background={bg}
+              isSelected={selectedBgId === bg.id}
+              isAnySelected={selectedBgId !== null}
+              onSelect={onSelectBg}
+              index={i + 1}
+            />
+          ))}
+        </div>
+      </div>
+    </TabContentWrapper>
+  );
+}
+
+/* ── Factions Tab ── */
+function FactionsTabContent() {
+  return (
+    <TabContentWrapper>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {factions.map((faction, i) => (
+          <FactionCard key={faction.id} faction={faction} index={i} />
+        ))}
+      </div>
+    </TabContentWrapper>
+  );
+}
+
+function FactionCard({ faction, index }: { faction: Faction; index: number }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.06, duration: 0.4 }}
+      className="group rounded-xl border border-covenant-silver/5 bg-covenant-abyss/60 p-6 backdrop-blur-sm transition-all hover:border-covenant-gold/15"
+    >
+      {/* Region badge */}
+      <div className="mb-3 flex items-center gap-3">
+        <span
+          className={`
+            rounded-full border px-3 py-1 font-heading text-xs tracking-[0.15em]
+            border-covenant-silver/10 text-covenant-silver/60
+          `}
+        >
+          {faction.region}
+        </span>
+      </div>
+      <h4 className="font-heading text-lg tracking-[0.12em] text-covenant-silver-light">
+        {faction.name}
+      </h4>
+      <p className="mt-3 font-body text-sm leading-relaxed text-covenant-silver-dark">
+        {faction.description}
+      </p>
+      <ul className="mt-4 space-y-1.5">
+        {faction.traits.map((trait) => (
+          <li
+            key={trait}
+            className="flex items-center gap-2 font-body text-xs text-covenant-silver/50"
+          >
+            <span className="h-1 w-1 rounded-full bg-covenant-gold/40" />
+            {trait}
+          </li>
+        ))}
+      </ul>
+    </motion.div>
+  );
+}
+
+/* ── Feats Tab ── */
+function FeatsTabContent() {
+  return (
+    <TabContentWrapper>
+      <div className="space-y-4">
+        {rewardFeats.map((feat, i) => (
+          <FeatCard key={feat.id} feat={feat} index={i} />
+        ))}
+      </div>
+    </TabContentWrapper>
+  );
+}
+
+function FeatCard({ feat, index }: { feat: RewardFeat; index: number }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.06, duration: 0.4 }}
+      className="group rounded-xl border border-covenant-silver/5 bg-covenant-abyss/60 p-6 backdrop-blur-sm transition-all hover:border-covenant-gold/15 md:p-8"
+    >
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <h4 className="font-heading text-lg tracking-[0.12em] text-covenant-silver-light">
+            {feat.name}
+          </h4>
+          {feat.prerequisite && (
+            <span className="mt-1 inline-block rounded-full border border-covenant-gold/15 bg-covenant-gold/5 px-2.5 py-0.5 font-body text-xs text-covenant-gold/60">
+              先决条件：{feat.prerequisite}
+            </span>
+          )}
+        </div>
+        <CrossScarDecoration variant="ornament" className="h-5 w-5 flex-none opacity-30" />
+      </div>
+
+      <p className="mt-4 font-body text-sm leading-relaxed text-covenant-silver-dark">
+        {feat.description}
+      </p>
+
+      <div className="mt-4 space-y-2">
+        {feat.mechanics.map((mech) => (
+          <div
+            key={mech}
+            className="flex items-start gap-2 rounded-lg bg-covenant-midnight/40 px-4 py-2"
+          >
+            <span className="mt-0.5 h-1.5 w-1.5 flex-none rounded-full bg-covenant-gold/50" />
+            <span className="font-body text-xs text-covenant-silver/60">{mech}</span>
+          </div>
+        ))}
+      </div>
+    </motion.div>
+  );
+}
