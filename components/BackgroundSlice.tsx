@@ -74,14 +74,50 @@ export default function BackgroundSlice({
       {/* ── Expanded: image + title + button ── */}
       {isSelected && (
         <div className="flex h-full w-full flex-col">
-          {/* 2:3 Image area — fills most of the expanded slice */}
+          {/* 2:3 Image area — feathered mask + ambient glow */}
           <div className="relative flex-1 overflow-hidden">
-            <div className="mx-auto h-full max-w-sm aspect-[2/3] overflow-hidden border border-covenant-silver/10 bg-covenant-abyss/60">
+            {/* Ambient glow behind image */}
+            <div
+              className="absolute inset-0 mx-auto max-w-sm aspect-[2/3]"
+              style={{
+                boxShadow: `
+                  -12px 0 30px -10px rgba(197,160,89,0.15),
+                  12px 0 30px -10px rgba(30,27,75,0.2),
+                  inset 0 0 40px rgba(0,0,0,0.3)
+                `,
+              }}
+            />
+            <div
+              className="mx-auto h-full max-w-sm aspect-[2/3] overflow-hidden border border-covenant-silver/5 bg-covenant-abyss/60"
+              style={{
+                maskImage: `linear-gradient(
+                  to bottom,
+                  transparent 0%,
+                  rgba(0,0,0,0.4) 12%,
+                  rgba(0,0,0,1) 22%,
+                  rgba(0,0,0,1) 78%,
+                  rgba(0,0,0,0.4) 88%,
+                  transparent 100%
+                )`,
+                WebkitMaskImage: `linear-gradient(
+                  to bottom,
+                  transparent 0%,
+                  rgba(0,0,0,0.4) 12%,
+                  rgba(0,0,0,1) 22%,
+                  rgba(0,0,0,1) 78%,
+                  rgba(0,0,0,0.4) 88%,
+                  transparent 100%
+                )`,
+              }}
+            >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={BACKGROUND_IMAGE_URLS[background.id]}
                 alt={background.title}
                 className="h-full w-full object-cover"
+                style={{
+                  boxShadow: "inset 0 0 30px rgba(0,0,0,0.4)",
+                }}
               />
             </div>
           </div>
