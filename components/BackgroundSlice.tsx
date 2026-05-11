@@ -93,19 +93,19 @@ export default function BackgroundSlice({
                 maskImage: `linear-gradient(
                   to bottom,
                   transparent 0%,
-                  rgba(0,0,0,0.4) 12%,
-                  rgba(0,0,0,1) 22%,
-                  rgba(0,0,0,1) 78%,
-                  rgba(0,0,0,0.4) 88%,
+                  rgba(0,0,0,0.4) 5%,
+                  rgba(0,0,0,1) 10%,
+                  rgba(0,0,0,1) 90%,
+                  rgba(0,0,0,0.4) 95%,
                   transparent 100%
                 )`,
                 WebkitMaskImage: `linear-gradient(
                   to bottom,
                   transparent 0%,
-                  rgba(0,0,0,0.4) 12%,
-                  rgba(0,0,0,1) 22%,
-                  rgba(0,0,0,1) 78%,
-                  rgba(0,0,0,0.4) 88%,
+                  rgba(0,0,0,0.4) 5%,
+                  rgba(0,0,0,1) 10%,
+                  rgba(0,0,0,1) 90%,
+                  rgba(0,0,0,0.4) 95%,
                   transparent 100%
                 )`,
               }}

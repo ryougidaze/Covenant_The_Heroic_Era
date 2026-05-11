@@ -85,19 +85,19 @@ export default function BackgroundDetailPanel({
                 maskImage: `linear-gradient(
                   to bottom,
                   transparent 0%,
-                  rgba(0,0,0,0.35) 10%,
-                  rgba(0,0,0,1) 20%,
-                  rgba(0,0,0,1) 80%,
-                  rgba(0,0,0,0.35) 90%,
+                  rgba(0,0,0,0.35) 4%,
+                  rgba(0,0,0,1) 8%,
+                  rgba(0,0,0,1) 92%,
+                  rgba(0,0,0,0.35) 96%,
                   transparent 100%
                 )`,
                 WebkitMaskImage: `linear-gradient(
                   to bottom,
                   transparent 0%,
-                  rgba(0,0,0,0.35) 10%,
-                  rgba(0,0,0,1) 20%,
-                  rgba(0,0,0,1) 80%,
-                  rgba(0,0,0,0.35) 90%,
+                  rgba(0,0,0,0.35) 4%,
+                  rgba(0,0,0,1) 8%,
+                  rgba(0,0,0,1) 92%,
+                  rgba(0,0,0,0.35) 96%,
                   transparent 100%
                 )`,
               }}

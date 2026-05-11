@@ -158,7 +158,7 @@ export default function RulesSection() {
       </div>
 
       {/* ── Tab Content ── */}
-      <div className="mx-auto max-w-[1440px] px-6 pb-32">
+      <div className="mx-auto max-w-[1600px] px-6 pb-32">
         <AnimatePresence mode="wait">
           {activeTab === "rules" && (
             <RulesTabContent key="rules" />
@@ -282,7 +282,7 @@ function BackgroundsTabContent({
   return (
     <TabContentWrapper>
       <div className="overflow-hidden rounded-xl border border-covenant-silver/5">
-        <div className="flex h-[66vh] md:h-[77vh] md:flex-row max-md:flex-col">
+        <div className="flex h-[73vh] md:h-[85vh] md:flex-row max-md:flex-col">
           {backgrounds.map((bg, i) => (
             <BackgroundSlice
               key={bg.id}
