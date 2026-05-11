@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Background } from "@/types";
+import { Background, BACKGROUND_IMAGE_URLS } from "@/types";
 
 interface BackgroundSliceProps {
   background: Background;
@@ -76,21 +76,13 @@ export default function BackgroundSlice({
         <div className="flex h-full w-full flex-col">
           {/* 2:3 Image area — fills most of the expanded slice */}
           <div className="relative flex-1 overflow-hidden">
-            <div className="mx-auto h-full max-w-sm aspect-[2/3] border border-covenant-silver/10 bg-gradient-to-b from-covenant-abyss/80 via-covenant-midnight/60 to-covenant-void/80">
-              {/* Placeholder — replace with your image */}
-              <div className="flex h-full w-full flex-col items-center justify-center px-4 text-center">
-                <motion.div
-                  className="mb-4 h-16 w-16 rounded-full border border-covenant-gold/20 bg-covenant-gold/5"
-                  animate={{ boxShadow: ["0 0 0px rgba(197,160,89,0)", "0 0 20px rgba(197,160,89,0.15)", "0 0 0px rgba(197,160,89,0)"] }}
-                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                />
-                <p className={`font-heading text-lg tracking-[0.2em] ${background.textColor}`}>
-                  {background.title}
-                </p>
-                <p className="mt-1 font-body text-xs tracking-wider text-covenant-silver/30">
-                  {background.subtitle}
-                </p>
-              </div>
+            <div className="mx-auto h-full max-w-sm aspect-[2/3] overflow-hidden border border-covenant-silver/10 bg-covenant-abyss/60">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={BACKGROUND_IMAGE_URLS[background.id]}
+                alt={background.title}
+                className="h-full w-full object-cover"
+              />
             </div>
           </div>
 

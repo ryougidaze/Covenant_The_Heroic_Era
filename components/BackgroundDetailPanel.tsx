@@ -2,16 +2,18 @@
 
 import { useEffect, useLayoutEffect } from "react";
 import { motion } from "framer-motion";
-import { BackgroundDetail, DetailBlock } from "@/types";
+import { BackgroundDetail, DetailBlock, BACKGROUND_IMAGE_URLS } from "@/types";
 
 interface BackgroundDetailPanelProps {
   detail: BackgroundDetail;
+  bgId: string;
   accentClass: string;
   onClose: () => void;
 }
 
 export default function BackgroundDetailPanel({
   detail,
+  bgId,
   accentClass,
   onClose,
 }: BackgroundDetailPanelProps) {
@@ -64,22 +66,13 @@ export default function BackgroundDetailPanel({
       >
         {/* ── LEFT: 2:3 Image area ── */}
         <div className="hidden w-2/5 flex-none items-center justify-center border-r border-covenant-silver/10 md:flex">
-          <div className="flex h-full w-full flex-col items-center justify-center px-6 text-center">
-            <motion.div
-              className="mb-6 h-20 w-20 rounded-full border-2 border-covenant-gold/30 bg-covenant-gold/10"
-              animate={{ boxShadow: [
-                "0 0 0px rgba(197,160,89,0)",
-                "0 0 30px rgba(197,160,89,0.15)",
-                "0 0 0px rgba(197,160,89,0)"
-              ]}}
-              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+          <div className="flex h-full w-full items-center justify-center p-6">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={BACKGROUND_IMAGE_URLS[bgId] || ""}
+              alt=""
+              className="max-h-full w-auto max-w-full object-contain"
             />
-            <p className={`font-heading text-xl tracking-[0.2em] ${accentClass}`}>
-              {detail.intro.slice(0, 20)}...
-            </p>
-            <p className="mt-3 font-body text-xs tracking-wider text-covenant-silver/25">
-              2:3 Character Art
-            </p>
           </div>
         </div>
 

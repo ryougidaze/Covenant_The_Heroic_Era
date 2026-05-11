@@ -189,6 +189,7 @@ export default function RulesSection() {
         {detailCard && detailBg && (
           <BackgroundDetailPanel
             detail={detailCard}
+            bgId={detailBg.id}
             accentClass={detailBg.textColor}
             onClose={handleCloseDetail}
           />
