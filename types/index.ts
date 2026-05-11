@@ -134,12 +134,12 @@ export interface BackgroundDetail {
  *   Max size:   < 500KB (Vercel optimises automatically via next/image if used)
  */
 export const BACKGROUND_IMAGE_URLS: Record<string, string> = {
-  radiantFaith: "/assets/radiant-faith.png",
-  nightFaith: "/assets/night-faith.png",
-  destructionFaith: "/assets/destruction-faith.png",
-  northernFaith: "/assets/northern-faith.png",
-  bountyHunter: "/assets/bounty-hunter.png",
-  easternHero: "/assets/eastern-hero.png",
-  elf: "/assets/elf.png",
-  dragonLair: "/assets/dragon-lair.png",
+  radiantFaith: "/assets/radiant-faith.jpg",
+  nightFaith: "/assets/night-faith.jpg",
+  destructionFaith: "/assets/destruction-faith.jpg",
+  northernFaith: "/assets/northern-faith.jpg",
+  bountyHunter: "/assets/bounty-hunter.jpg",
+  easternHero: "/assets/eastern-hero.jpg",
+  elf: "/assets/elf.jpg",
+  dragonLair: "/assets/dragon-lair.jpg",
 };
