@@ -7,14 +7,7 @@ import GoldenFlameParticles from "@/components/GoldenFlameParticles";
 
 export default function LandingPage() {
   return (
-    <main className="relative flex h-screen min-h-[600px] flex-col items-center justify-center overflow-hidden bg-covenant-void">
-      {/* ── Background layers ── */}
-      <div className="pointer-events-none absolute inset-0">
-        {/* Radial ultramarine glow */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(30,58,110,0.18)_0%,_transparent_65%)]" />
-        {/* Subtle radial gold accent */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(197,160,89,0.06)_0%,_transparent_50%)]" />
-      </div>
+    <main className="relative flex h-screen min-h-[600px] flex-col items-center justify-center overflow-hidden">
 
       {/* ── Golden flame particles (symmetric) ── */}
       <GoldenFlameParticles side="left" particleCount={30} />

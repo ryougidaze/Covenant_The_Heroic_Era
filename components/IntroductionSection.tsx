@@ -16,10 +16,10 @@ export default function IntroductionSection() {
   return (
     <section
       id="section-introduction"
-      className="relative min-h-screen bg-covenant-void"
+      className="relative min-h-screen"
     >
       {/* Background watermark */}
-      <div className="pointer-events-none fixed inset-0 opacity-15">
+      <div className="pointer-events-none fixed inset-0 opacity-10">
         <CrossScarDecoration variant="watermark" />
       </div>
 

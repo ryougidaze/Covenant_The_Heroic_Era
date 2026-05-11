@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Cinzel, Inter } from "next/font/google";
+import LayoutWrapper from "@/components/LayoutWrapper";
 import "./globals.css";
 
 const cinzel = Cinzel({
@@ -44,7 +45,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="zh-CN" className={`${cinzel.variable} ${inter.variable}`}>
-      <body className="font-body antialiased">{children}</body>
+      <body className="font-body antialiased">
+        <LayoutWrapper>{children}</LayoutWrapper>
+      </body>
     </html>
   );
 }

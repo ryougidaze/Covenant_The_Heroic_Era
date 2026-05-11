@@ -75,9 +75,9 @@ export default function RulesSection() {
   return (
     <section
       id="section-rules"
-      className="relative min-h-screen bg-covenant-void"
+      className="relative min-h-screen"
     >
-      {/* Dynamic background image */}
+      {/* Dynamic background image — lightly overlaid so global bg breathes through */}
       <AnimatePresence mode="wait">
         {bgUrl && activeTab === "backgrounds" && (
           <motion.div
@@ -100,18 +100,10 @@ export default function RulesSection() {
                 transition={{ duration: 0.8, ease: "easeOut" }}
               />
             )}
-            <div className="absolute inset-0 bg-covenant-void/80 backdrop-blur-[2px]" />
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(30,58,110,0.15)_0%,_transparent_70%)]" />
+            <div className="absolute inset-0 bg-covenant-void/60 backdrop-blur-[1px]" />
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* Default bg when no selection or not on backgrounds tab */}
-      {(!bgUrl || activeTab !== "backgrounds") && (
-        <div className="fixed inset-0 -z-10 bg-covenant-void">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(30,58,110,0.1)_0%,_transparent_70%)]" />
-        </div>
-      )}
 
       <div className="relative z-10">
       {/* ── Section Header ── */}
