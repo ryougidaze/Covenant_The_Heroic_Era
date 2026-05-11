@@ -166,68 +166,67 @@ function LevelGroupList({
   blocks: DetailBlock[];
   accentClass: string;
 }) {
-  // Separate notes from features
-  const notes = blocks.filter((b) => b.type === "note");
-  const features = blocks.filter((b) => b.type === "feature");
-
-  // Group features by level
-  const byLevel = new Map<number, DetailBlock[]>();
-  for (const f of features) {
-    const lv = f.level ?? 0;
-    if (!byLevel.has(lv)) byLevel.set(lv, []);
-    byLevel.get(lv)!.push(f);
-  }
-
+  // Render blocks in original order: features grouped by level, notes inline
   let globalIdx = 0;
+  const elements: React.ReactNode[] = [];
+  let currentLevel: number | null = null;
+  let currentGroup: DetailBlock[] = [];
+
+  const flushGroup = () => {
+    if (currentGroup.length === 0) return;
+    const level = currentLevel ?? 0;
+    const isMulti = currentGroup.length > 1;
+    elements.push(
+      <div key={`lv-${level}`} className="mb-5">
+        <div className="absolute -left-[29px] top-0 h-3 w-3 rounded-full border-2 border-current/30 bg-covenant-void" />
+        <span className={`inline-block mb-3 rounded-full border px-3 py-0.5 font-heading text-xs tracking-wider ${accentClass} border-current/20 bg-covenant-midnight`}>
+          Lv.{level}
+        </span>
+        <div className={isMulti ? "space-y-3" : ""}>
+          {currentGroup.map((b) => (
+            <AbilityCard key={`${level}-${b.title}`} block={b} index={globalIdx++} />
+          ))}
+        </div>
+      </div>
+    );
+    currentGroup = [];
+    currentLevel = null;
+  };
+
+  for (const block of blocks) {
+    if (block.type === "note") {
+      flushGroup();
+      const idx = globalIdx++;
+      elements.push(
+        <motion.div
+          key={`note-${idx}`}
+          initial={{ opacity: 0, x: -8 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: idx * 0.03, duration: 0.25 }}
+          className="relative mb-5"
+        >
+          <div className="absolute -left-[29px] top-2 h-3 w-3 rounded-full border-2 border-covenant-gold/30 bg-covenant-void" />
+          <div className="rounded-xl border border-covenant-gold/10 bg-covenant-gold/[0.03] px-5 py-3">
+            <span className="font-body text-sm leading-relaxed text-covenant-gold/60">
+              <HighlightNumbers text={block.text} />
+            </span>
+          </div>
+        </motion.div>
+      );
+    } else {
+      // Feature: group by level
+      if (block.level !== currentLevel) {
+        flushGroup();
+        currentLevel = block.level ?? 0;
+      }
+      currentGroup.push(block);
+    }
+  }
+  flushGroup();
+
   return (
     <div className="relative border-l-2 border-covenant-gold/20 pl-6">
-      {Array.from(byLevel.entries()).map(([level, items]) => {
-        const isMulti = items.length > 1;
-        return (
-          <div key={level} className="mb-5">
-            {/* Level label */}
-            <div className="absolute -left-[29px] top-0 h-3 w-3 rounded-full border-2 border-current/30 bg-covenant-void" />
-            <span className={`inline-block mb-3 rounded-full border px-3 py-0.5 font-heading text-xs tracking-wider ${accentClass} border-current/20 bg-covenant-midnight`}>
-              Lv.{level}
-            </span>
-
-            {/* Ability cards */}
-            <div className={`${isMulti ? "space-y-3" : ""}`}>
-              {items.map((block) => {
-                const idx = globalIdx++;
-                return (
-                  <AbilityCard
-                    key={`${level}-${block.title}`}
-                    block={block}
-                    index={idx}
-                  />
-                );
-              })}
-            </div>
-          </div>
-        );
-      })}
-
-      {/* Notes after features */}
-      {notes.map((block) => {
-        const idx = globalIdx++;
-        return (
-          <motion.div
-            key={`note-${idx}`}
-            initial={{ opacity: 0, x: -8 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: idx * 0.03, duration: 0.25 }}
-            className="relative mb-5"
-          >
-            <div className="absolute -left-[29px] top-2 h-3 w-3 rounded-full border-2 border-covenant-gold/30 bg-covenant-void" />
-            <div className="rounded-xl border border-covenant-gold/10 bg-covenant-gold/[0.03] px-5 py-3">
-              <span className="font-body text-sm leading-relaxed text-covenant-gold/60">
-                <HighlightNumbers text={block.text} />
-              </span>
-            </div>
-          </motion.div>
-        );
-      })}
+      {elements}
     </div>
   );
 }
