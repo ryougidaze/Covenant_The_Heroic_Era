@@ -87,10 +87,12 @@ export interface UnsplashImageUrls {
 /**
  * BACKGROUND_IMAGE_URLS
  *
- * Fill in each background's full-page image URL.
- * Leave as empty string "" to show only the dark gradient background.
+ * Place your background images in public/assets/ and reference them here.
+ * Example: "/assets/radiant-faith.jpg" maps to public/assets/radiant-faith.jpg
  *
- * Recommended image themes per background:
+ * Leave as empty string "" to show only the dark ultramarine gradient.
+ *
+ * ── Recommended image themes ──
  *   radiantFaith     — cathedral light, stained glass, divine radiance
  *   nightFaith       — starry night, moonlit sky, celestial darkness
  *   destructionFaith — volcanic fire, ash, blazing inferno
@@ -99,14 +101,19 @@ export interface UnsplashImageUrls {
  *   easternHero      — misty bamboo forest, ancient temple, mountain peak
  *   elf              — enchanted forest, ancient tree, dappled sunlight
  *   dragonLair       — epic mountain peak, storm clouds, dragon's keep
+ *
+ * ── Image requirements ──
+ *   Resolution: 1920×1080 or higher (16:9)
+ *   Format:     .jpg or .webp (recommended for performance)
+ *   Max size:   < 500KB (Vercel optimises automatically via next/image if used)
  */
 export const BACKGROUND_IMAGE_URLS: Record<string, string> = {
-  radiantFaith: "",
-  nightFaith: "",
-  destructionFaith: "",
-  northernFaith: "",
-  bountyHunter: "",
-  easternHero: "",
-  elf: "",
-  dragonLair: "",
+  radiantFaith: "/assets/radiant-faith.jpg",
+  nightFaith: "/assets/night-faith.jpg",
+  destructionFaith: "/assets/destruction-faith.jpg",
+  northernFaith: "/assets/northern-faith.jpg",
+  bountyHunter: "/assets/bounty-hunter.jpg",
+  easternHero: "/assets/eastern-hero.jpg",
+  elf: "/assets/elf.jpg",
+  dragonLair: "/assets/dragon-lair.jpg",
 };

@@ -26,9 +26,11 @@ export default function RulesSection() {
   const [activeTab, setActiveTab] = useState<RulesTab>("rules");
   const [selectedBgId, setSelectedBgId] = useState<string | null>(null);
   const [hoveredBgId, setHoveredBgId] = useState<string | null>(null);
+  const [imgError, setImgError] = useState(false);
 
   const handleBgSelect = useCallback((id: string) => {
     setSelectedBgId((prev) => (prev === id ? null : id));
+    setImgError(false);
   }, []);
 
   const handleHover = useCallback((id: string) => {
@@ -67,14 +69,17 @@ export default function RulesSection() {
             className="fixed inset-0 z-0"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <motion.img
-              src={bgUrl}
-              alt=""
-              className="h-full w-full object-cover"
-              loading="eager"
-              animate={{ scale: isBgZoomed ? 1.05 : 1 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-            />
+            {!imgError && (
+              <motion.img
+                src={bgUrl}
+                alt=""
+                className="h-full w-full object-cover"
+                loading="eager"
+                onError={() => setImgError(true)}
+                animate={{ scale: isBgZoomed ? 1.05 : 1 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+              />
+            )}
             <div className="absolute inset-0 bg-covenant-void/80 backdrop-blur-[2px]" />
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(30,58,110,0.15)_0%,_transparent_70%)]" />
           </motion.div>
