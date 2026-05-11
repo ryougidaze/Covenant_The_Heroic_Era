@@ -1,22 +1,15 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import { worldLore } from "@/data/world-lore";
 import { LoreSection as LoreSectionType, LoreChapter } from "@/types";
 import CrossScarDecoration from "./CrossScarDecoration";
 
 export default function IntroductionSection() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"],
-  });
 
   return (
     <section
       id="section-introduction"
-      ref={containerRef}
       className="relative min-h-screen bg-covenant-void"
     >
       {/* Background watermark */}
