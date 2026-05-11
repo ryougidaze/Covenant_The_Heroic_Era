@@ -1,6 +1,7 @@
 "use client";
 
 import GlobalBackground from "./GlobalBackground";
+import BgmPlayer from "./BgmPlayer";
 
 export default function LayoutWrapper({
   children,
@@ -10,6 +11,7 @@ export default function LayoutWrapper({
   return (
     <>
       <GlobalBackground />
+      <BgmPlayer />
       {children}
     </>
   );
