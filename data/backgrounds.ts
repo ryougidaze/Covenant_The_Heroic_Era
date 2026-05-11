@@ -345,7 +345,7 @@ export const backgrounds: Background[] = [
   },
   {
     id: "elf",
-    title: "精灵",
+    title: "精灵古庭",
     subtitle: "Elf",
     tagline: "聆听古木的低语，编织星辰的轨迹",
     color: "covenant-sylvan",

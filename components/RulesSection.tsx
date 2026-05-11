@@ -25,9 +25,18 @@ const TABS: TabDef[] = [
 export default function RulesSection() {
   const [activeTab, setActiveTab] = useState<RulesTab>("rules");
   const [selectedBgId, setSelectedBgId] = useState<string | null>(null);
+  const [hoveredBgId, setHoveredBgId] = useState<string | null>(null);
 
   const handleBgSelect = useCallback((id: string) => {
     setSelectedBgId((prev) => (prev === id ? null : id));
+  }, []);
+
+  const handleHover = useCallback((id: string) => {
+    setHoveredBgId(id);
+  }, []);
+
+  const handleLeave = useCallback(() => {
+    setHoveredBgId(null);
   }, []);
 
   const selectedBg = selectedBgId
@@ -37,6 +46,9 @@ export default function RulesSection() {
     selectedBg && BACKGROUND_IMAGE_URLS[selectedBg.id]
       ? BACKGROUND_IMAGE_URLS[selectedBg.id]
       : null;
+
+  // Determine if bg image should zoom
+  const isBgZoomed = hoveredBgId !== null;
 
   return (
     <section
@@ -55,11 +67,13 @@ export default function RulesSection() {
             className="fixed inset-0 z-0"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <motion.img
               src={bgUrl}
               alt=""
               className="h-full w-full object-cover"
               loading="eager"
+              animate={{ scale: isBgZoomed ? 1.05 : 1 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
             />
             <div className="absolute inset-0 bg-covenant-void/80 backdrop-blur-[2px]" />
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(30,58,110,0.15)_0%,_transparent_70%)]" />
@@ -137,6 +151,8 @@ export default function RulesSection() {
               key="backgrounds"
               selectedBgId={selectedBgId}
               onSelectBg={handleBgSelect}
+              onHoverBg={handleHover}
+              onLeaveBg={handleLeave}
             />
           )}
           {activeTab === "factions" && (
@@ -223,9 +239,13 @@ function RuleCard({ rule, index }: { rule: GameRule; index: number }) {
 function BackgroundsTabContent({
   selectedBgId,
   onSelectBg,
+  onHoverBg,
+  onLeaveBg,
 }: {
   selectedBgId: string | null;
   onSelectBg: (id: string) => void;
+  onHoverBg: (id: string) => void;
+  onLeaveBg: () => void;
 }) {
   return (
     <TabContentWrapper>
@@ -238,6 +258,8 @@ function BackgroundsTabContent({
               isSelected={selectedBgId === bg.id}
               isAnySelected={selectedBgId !== null}
               onSelect={onSelectBg}
+              onHover={onHoverBg}
+              onLeave={onLeaveBg}
               index={i + 1}
             />
           ))}

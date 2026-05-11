@@ -10,12 +10,12 @@ interface CovenantContentProps {
   accentColor: string;
 }
 
-const fadeInUp = {
-  hidden: { opacity: 0, y: 16 },
+const slideInRight = {
+  hidden: { opacity: 0, x: 30 },
   visible: (i: number) => ({
     opacity: 1,
-    y: 0,
-    transition: { delay: i * 0.07, duration: 0.45, ease: "easeOut" },
+    x: 0,
+    transition: { delay: i * 0.07, duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] },
   }),
 };
 
@@ -46,7 +46,7 @@ export default function CovenantContent({
           {features.map((feature, i) => (
             <motion.div
               key={feature.title}
-              variants={fadeInUp}
+              variants={slideInRight}
               custom={i}
               className="group rounded-lg border border-covenant-silver/5 bg-covenant-abyss/60 p-5 backdrop-blur-sm transition-all hover:border-covenant-gold/15 hover:bg-covenant-abyss/80"
             >
@@ -84,7 +84,7 @@ export default function CovenantContent({
           {levelTiers.map((tier, i) => (
             <motion.div
               key={tier.level}
-              variants={fadeInUp}
+              variants={slideInRight}
               custom={features.length + i}
               className="flex items-start gap-5 rounded-lg border border-covenant-silver/5 bg-covenant-abyss/40 p-4 backdrop-blur-sm transition-all hover:border-covenant-gold/10"
             >
