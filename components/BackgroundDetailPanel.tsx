@@ -249,11 +249,8 @@ function AbilityCard({
       transition={{ delay: index * 0.03, duration: 0.25 }}
       className="rounded-xl border border-covenant-silver/5 bg-covenant-abyss/50 p-4 transition-colors hover:border-covenant-gold/10"
     >
-      {/* Header: icon + name + badges */}
+      {/* Header: name + badges */}
       <div className="flex flex-wrap items-center gap-2 mb-2">
-        {block.icon && (
-          <span className="text-lg leading-none">{block.icon}</span>
-        )}
         {block.title && (
           <h4 className="font-heading text-sm font-semibold tracking-wider text-covenant-silver-light/90">
             {block.title}
