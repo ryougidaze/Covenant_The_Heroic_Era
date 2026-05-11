@@ -98,6 +98,9 @@ export interface DetailBlock {
   type: "lore" | "feature" | "note" | "quote";
   level?: number;
   title?: string;
+  action?: string;     // "动作" | "附赠动作" | "反应" | "被动" | "特性" | "传奇动作"
+  usage?: string;      // "每天两次" | "每天一次" | "每轮一次" etc.
+  icon?: string;       // emoji icon
   text: string;
   highlights?: string[];
 }

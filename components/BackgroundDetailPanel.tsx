@@ -132,18 +132,10 @@ export default function BackgroundDetailPanel({
                   {section.title}
                 </motion.h3>
 
-                <div className="relative border-l-2 border-covenant-gold/20 pl-6">
-                  {section.content
-                    .filter((b) => b.type === "feature" || b.type === "note")
-                    .map((block, bIdx) => (
-                      <TimelineItem
-                        key={bIdx}
-                        block={block}
-                        index={bIdx}
-                        accentClass={accentClass}
-                      />
-                    ))}
-                </div>
+                <LevelGroupList
+                  blocks={section.content.filter((b) => b.type === "feature" || b.type === "note")}
+                  accentClass={accentClass}
+                />
               </div>
             ))}
 
@@ -155,56 +147,132 @@ export default function BackgroundDetailPanel({
   );
 }
 
-/* ── Timeline item ── */
-function TimelineItem({
+/* ── Action badge color map ── */
+const ACTION_COLORS: Record<string, string> = {
+  "动作": "border-blue-400/30 bg-blue-400/10 text-blue-300",
+  "附赠动作": "border-emerald-400/30 bg-emerald-400/10 text-emerald-300",
+  "反应": "border-amber-400/30 bg-amber-400/10 text-amber-300",
+  "被动": "border-slate-400/30 bg-slate-400/10 text-slate-300",
+  "特性": "border-purple-400/30 bg-purple-400/10 text-purple-300",
+  "传奇动作": "border-red-400/30 bg-red-400/10 text-red-300",
+  "传奇反应": "border-red-400/30 bg-red-400/10 text-red-300",
+};
+
+/* ── Group blocks by level, render as cards ── */
+function LevelGroupList({
+  blocks,
+  accentClass,
+}: {
+  blocks: DetailBlock[];
+  accentClass: string;
+}) {
+  // Separate notes from features
+  const notes = blocks.filter((b) => b.type === "note");
+  const features = blocks.filter((b) => b.type === "feature");
+
+  // Group features by level
+  const byLevel = new Map<number, DetailBlock[]>();
+  for (const f of features) {
+    const lv = f.level ?? 0;
+    if (!byLevel.has(lv)) byLevel.set(lv, []);
+    byLevel.get(lv)!.push(f);
+  }
+
+  let globalIdx = 0;
+  return (
+    <div className="relative border-l-2 border-covenant-gold/20 pl-6">
+      {Array.from(byLevel.entries()).map(([level, items]) => {
+        const isMulti = items.length > 1;
+        return (
+          <div key={level} className="mb-5">
+            {/* Level label */}
+            <div className="absolute -left-[29px] top-0 h-3 w-3 rounded-full border-2 border-current/30 bg-covenant-void" />
+            <span className={`inline-block mb-3 rounded-full border px-3 py-0.5 font-heading text-xs tracking-wider ${accentClass} border-current/20 bg-covenant-midnight`}>
+              Lv.{level}
+            </span>
+
+            {/* Ability cards */}
+            <div className={`${isMulti ? "space-y-3" : ""}`}>
+              {items.map((block) => {
+                const idx = globalIdx++;
+                return (
+                  <AbilityCard
+                    key={`${level}-${block.title}`}
+                    block={block}
+                    index={idx}
+                  />
+                );
+              })}
+            </div>
+          </div>
+        );
+      })}
+
+      {/* Notes after features */}
+      {notes.map((block) => {
+        const idx = globalIdx++;
+        return (
+          <motion.div
+            key={`note-${idx}`}
+            initial={{ opacity: 0, x: -8 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: idx * 0.03, duration: 0.25 }}
+            className="relative mb-5"
+          >
+            <div className="absolute -left-[29px] top-2 h-3 w-3 rounded-full border-2 border-covenant-gold/30 bg-covenant-void" />
+            <div className="rounded-xl border border-covenant-gold/10 bg-covenant-gold/[0.03] px-5 py-3">
+              <span className="font-body text-sm leading-relaxed text-covenant-gold/60">
+                <HighlightNumbers text={block.text} />
+              </span>
+            </div>
+          </motion.div>
+        );
+      })}
+    </div>
+  );
+}
+
+/* ── Individual ability card ── */
+function AbilityCard({
   block,
   index,
-  accentClass,
 }: {
   block: DetailBlock;
   index: number;
-  accentClass: string;
 }) {
-  if (block.type === "note") {
-    return (
-      <motion.div
-        initial={{ opacity: 0, x: -8 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: index * 0.03, duration: 0.25 }}
-        className="relative mb-5"
-      >
-        <div className="absolute -left-[29px] top-2 h-3 w-3 rounded-full border-2 border-covenant-gold/30 bg-covenant-void" />
-        <div className="rounded-xl border border-covenant-gold/10 bg-covenant-gold/[0.03] px-5 py-3">
-          <span className="font-body text-sm leading-relaxed text-covenant-gold/60">
-            <HighlightNumbers text={block.text} />
-          </span>
-        </div>
-      </motion.div>
-    );
-  }
+  const badgeClass = block.action ? (ACTION_COLORS[block.action] || ACTION_COLORS["被动"]) : "";
 
   return (
     <motion.div
       initial={{ opacity: 0, x: -8 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: index * 0.03, duration: 0.25 }}
-      className="relative mb-5"
+      className="rounded-xl border border-covenant-silver/5 bg-covenant-abyss/50 p-4 transition-colors hover:border-covenant-gold/10"
     >
-      <div className={`absolute -left-[29px] top-2 h-3 w-3 rounded-full border-2 border-current/30 ${accentClass} bg-covenant-void`} />
+      {/* Header: icon + name + badges */}
+      <div className="flex flex-wrap items-center gap-2 mb-2">
+        {block.icon && (
+          <span className="text-lg leading-none">{block.icon}</span>
+        )}
+        {block.title && (
+          <h4 className="font-heading text-sm font-semibold tracking-wider text-covenant-silver-light/90">
+            {block.title}
+          </h4>
+        )}
+        {block.action && (
+          <span className={`rounded-full border px-2 py-0.5 font-body text-xs ${badgeClass}`}>
+            {block.action}
+          </span>
+        )}
+        {block.usage && (
+          <span className="ml-auto font-heading text-xs tracking-wider text-covenant-gold">
+            {block.usage}
+          </span>
+        )}
+      </div>
 
-      {block.level && (
-        <span className={`inline-block mb-2 rounded-full border px-3 py-0.5 font-heading text-xs tracking-wider ${accentClass} border-current/20 bg-covenant-midnight`}>
-          Lv.{block.level}
-        </span>
-      )}
-
-      {block.title && (
-        <h4 className="font-heading text-sm tracking-wider text-covenant-silver-light/90">
-          {block.title}
-        </h4>
-      )}
-
-      <p className="mt-1 font-body text-sm leading-relaxed text-covenant-silver-dark/70">
+      {/* Description */}
+      <p className="font-body text-sm leading-relaxed text-covenant-silver-dark/70">
         <HighlightNumbers text={block.text} />
       </p>
     </motion.div>
