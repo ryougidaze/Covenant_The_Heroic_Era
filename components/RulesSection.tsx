@@ -5,10 +5,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import { gameRules, specialRulesSummary, factions } from "@/data/game-rules";
 import { backgrounds } from "@/data/backgrounds";
 import { rewardFeatsTree } from "@/data/reward-feats-tree";
+import { backgroundDetailCards } from "@/data/background-detail-cards";
 import { BACKGROUND_IMAGE_URLS, GameRule, Faction } from "@/types";
 import CrossScarDecoration from "./CrossScarDecoration";
 import BackgroundSlice from "./BackgroundSlice";
 import RewardFeatsAccordion from "./RewardFeatsAccordion";
+import BackgroundDetailPanel from "./BackgroundDetailPanel";
 
 type RulesTab = "rules" | "backgrounds" | "factions" | "feats";
 
@@ -29,6 +31,7 @@ export default function RulesSection() {
   const [selectedBgId, setSelectedBgId] = useState<string | null>(null);
   const [hoveredBgId, setHoveredBgId] = useState<string | null>(null);
   const [imgError, setImgError] = useState(false);
+  const [detailBgId, setDetailBgId] = useState<string | null>(null);
 
   const handleBgSelect = useCallback((id: string) => {
     setSelectedBgId((prev) => (prev === id ? null : id));
@@ -42,6 +45,21 @@ export default function RulesSection() {
   const handleLeave = useCallback(() => {
     setHoveredBgId(null);
   }, []);
+
+  const handleOpenDetail = useCallback((id: string) => {
+    setDetailBgId(id);
+  }, []);
+
+  const handleCloseDetail = useCallback(() => {
+    setDetailBgId(null);
+  }, []);
+
+  const detailCard = detailBgId
+    ? backgroundDetailCards.find((d) => d.id === detailBgId) ?? null
+    : null;
+  const detailBg = detailBgId
+    ? backgrounds.find((b) => b.id === detailBgId) ?? null
+    : null;
 
   const selectedBg = selectedBgId
     ? backgrounds.find((b) => b.id === selectedBgId) ?? null
@@ -160,6 +178,7 @@ export default function RulesSection() {
               onSelectBg={handleBgSelect}
               onHoverBg={handleHover}
               onLeaveBg={handleLeave}
+              onOpenDetail={handleOpenDetail}
             />
           )}
           {activeTab === "factions" && (
@@ -172,6 +191,17 @@ export default function RulesSection() {
       </div>
 
       </div>{/* close relative z-10 */}
+
+      {/* ── Global Detail Overlay (decoupled from slice DOM) ── */}
+      <AnimatePresence>
+        {detailCard && detailBg && (
+          <BackgroundDetailPanel
+            detail={detailCard}
+            accentClass={detailBg.textColor}
+            onClose={handleCloseDetail}
+          />
+        )}
+      </AnimatePresence>
     </section>
   );
 }
@@ -248,11 +278,13 @@ function BackgroundsTabContent({
   onSelectBg,
   onHoverBg,
   onLeaveBg,
+  onOpenDetail,
 }: {
   selectedBgId: string | null;
   onSelectBg: (id: string) => void;
   onHoverBg: (id: string) => void;
   onLeaveBg: () => void;
+  onOpenDetail: (id: string) => void;
 }) {
   return (
     <TabContentWrapper>
@@ -267,6 +299,7 @@ function BackgroundsTabContent({
               onSelect={onSelectBg}
               onHover={onHoverBg}
               onLeave={onLeaveBg}
+              onOpenDetail={onOpenDetail}
               index={i + 1}
             />
           ))}
