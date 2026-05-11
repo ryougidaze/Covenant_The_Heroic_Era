@@ -1,37 +1,34 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import CrossScarDecoration from "./CrossScarDecoration";
 
-export type SectionId = "introduction" | "rules";
+type RouteId = "home" | "intro" | "rules";
 
 interface NavItem {
-  id: SectionId;
+  id: RouteId;
   label: string;
   subtitle: string;
+  href: string;
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { id: "introduction", label: "英雄时代", subtitle: "Introduction" },
-  { id: "rules", label: "D&D 模组", subtitle: "Rules & Mechanics" },
+  { id: "intro", label: "英雄时代", subtitle: "Introduction", href: "/intro" },
+  { id: "rules", label: "D&D 模组", subtitle: "Rules & Mechanics", href: "/rules" },
 ];
 
-interface NavigationProps {
-  activeSection: SectionId;
-  onNavigate: (id: SectionId) => void;
-}
-
-export default function Navigation({
-  activeSection,
-  onNavigate,
-}: NavigationProps) {
+export default function Navigation() {
+  const pathname = usePathname();
   const [visible, setVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
+  const activeSection: RouteId = pathname === "/intro" ? "intro" : pathname === "/rules" ? "rules" : "home";
+
   const handleScroll = useCallback(() => {
     const currentY = window.scrollY;
-    // Show nav at top of page or when scrolling up; hide when scrolling down past 200px
     if (currentY < 60) {
       setVisible(true);
     } else if (currentY > lastScrollY && currentY > 200) {
@@ -58,17 +55,20 @@ export default function Navigation({
           className="fixed left-0 right-0 top-0 z-50 flex justify-center px-4 pt-4"
         >
           <div className="flex items-center gap-1 rounded-full border border-covenant-silver/10 bg-covenant-void/70 px-2 py-2 shadow-lg shadow-black/20 backdrop-blur-xl md:gap-2 md:px-3">
-            {/* Logo mark */}
-            <div className="mr-1 hidden md:block">
+            {/* Home / logo link */}
+            <Link
+              href="/"
+              className="mr-1 flex items-center justify-center rounded-full p-1.5 transition-opacity hover:opacity-80"
+            >
               <CrossScarDecoration variant="ornament" className="h-5 w-5 opacity-60" />
-            </div>
+            </Link>
 
             {NAV_ITEMS.map((item) => {
               const isActive = activeSection === item.id;
               return (
-                <button
+                <Link
                   key={item.id}
-                  onClick={() => onNavigate(item.id)}
+                  href={item.href}
                   className={`
                     group relative rounded-full px-4 py-2 text-sm transition-all duration-300 md:px-6 md:text-base
                     ${
@@ -97,25 +97,28 @@ export default function Navigation({
                   >
                     {item.subtitle}
                   </span>
-                </button>
+                </Link>
               );
             })}
 
             {/* Active dot indicator */}
             <div className="ml-1 flex gap-1.5">
-              {NAV_ITEMS.map((item) => (
-                <span
-                  key={item.id}
-                  className={`
-                    h-1.5 w-1.5 rounded-full transition-all duration-500
-                    ${
-                      activeSection === item.id
-                        ? "bg-covenant-gold shadow-[0_0_6px_rgba(197,160,89,0.5)]"
-                        : "bg-covenant-silver/20"
-                    }
-                  `}
-                />
-              ))}
+              <span
+                className={`
+                  h-1.5 w-1.5 rounded-full transition-all duration-500
+                  ${activeSection === "intro"
+                    ? "bg-covenant-gold shadow-[0_0_6px_rgba(197,160,89,0.5)]"
+                    : "bg-covenant-silver/20"}
+                `}
+              />
+              <span
+                className={`
+                  h-1.5 w-1.5 rounded-full transition-all duration-500
+                  ${activeSection === "rules"
+                    ? "bg-covenant-gold shadow-[0_0_6px_rgba(197,160,89,0.5)]"
+                    : "bg-covenant-silver/20"}
+                `}
+              />
             </div>
           </div>
         </motion.nav>
