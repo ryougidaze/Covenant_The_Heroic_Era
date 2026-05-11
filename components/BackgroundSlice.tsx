@@ -177,56 +177,58 @@ export default function BackgroundSlice({
               levelTiers={background.levelTiers}
               accentColor={background.textColor}
             />
-
-            {/* ── 详细信息 Button ── */}
-            {detailCard && (
-              <div className="border-t border-covenant-silver/5 px-6 pb-6 md:px-10">
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setShowDetailPanel(true);
-                  }}
-                  className="group relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-xl border border-covenant-gold/20 bg-covenant-gold/[0.04] px-6 py-4 transition-all duration-500 hover:border-covenant-gold/40 hover:bg-covenant-gold/[0.08]"
-                >
-                  {/* Subtle glow on hover */}
-                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-covenant-gold/[0.06] to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-
-                  <span className="relative z-10 font-heading text-sm tracking-[0.2em] text-covenant-gold/80 transition-colors group-hover:text-covenant-gold">
-                    详细信息
-                  </span>
-                  <span className="relative z-10 font-body text-xs tracking-wider text-covenant-gold/40">
-                    Detailed Info
-                  </span>
-                  <motion.svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 16 16"
-                    fill="none"
-                    className="relative z-10 text-covenant-gold/60 transition-transform group-hover:translate-x-0.5"
-                  >
-                    <path
-                      d="M6 4L10 8L6 12"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </motion.svg>
-                </button>
-              </div>
-            )}
-
-            {/* ── Overlay Detail Panel ── */}
-            <AnimatePresence>
-              {showDetailPanel && detailCard && (
-                <BackgroundDetailPanel
-                  detail={detailCard}
-                  accentClass={background.textColor}
-                  onClose={() => setShowDetailPanel(false)}
-                />
-              )}
-            </AnimatePresence>
           </div>
+
+          {/* ── 详细信息 Button — pinned at bottom ── */}
+          {detailCard && (
+            <div className="flex-none border-t border-covenant-silver/10 px-6 py-4 md:px-10">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowDetailPanel(true);
+                }}
+                className="group relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-xl border-2 border-covenant-gold/40 bg-gradient-to-r from-covenant-gold/10 to-covenant-gold/5 px-6 py-4 transition-all duration-500 hover:border-covenant-gold/60 hover:from-covenant-gold/20 hover:to-covenant-gold/10 active:scale-[0.98]"
+              >
+                {/* Animated shimmer on hover */}
+                <div className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/[0.04] to-transparent group-hover:translate-x-full transition-transform duration-700" />
+
+                <span className="relative z-10 font-heading text-base tracking-[0.2em] text-covenant-gold">
+                  详细信息
+                </span>
+                <span className="relative z-10 font-body text-sm tracking-wider text-covenant-gold/50">
+                  Detailed Info
+                </span>
+                <motion.svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 18 18"
+                  fill="none"
+                  className="relative z-10 text-covenant-gold"
+                  animate={{ x: [0, 4, 0] }}
+                  transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  <path
+                    d="M6 4L12 9L6 14"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </motion.svg>
+              </button>
+            </div>
+          )}
+
+          {/* ── Overlay Detail Panel ── */}
+          <AnimatePresence>
+            {showDetailPanel && detailCard && (
+              <BackgroundDetailPanel
+                detail={detailCard}
+                accentClass={background.textColor}
+                onClose={() => setShowDetailPanel(false)}
+              />
+            )}
+          </AnimatePresence>
         </motion.div>
       )}
     </motion.div>
