@@ -14,9 +14,8 @@ const withSerwist = withSerwistInit({
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
+    unoptimized: true, // images pre-converted to WebP, skip server-side sharp
     formats: ["image/webp", "image/avif"],
-    deviceSizes: [384, 640, 768, 1024, 1280, 1536, 1920],
-    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     remotePatterns: [
       {
         protocol: "https",
