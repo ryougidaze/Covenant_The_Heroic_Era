@@ -49,4 +49,3 @@ public/sw.js.map
 .wrangler/
 .open-next/
 .dev.vars
-wrangler.jsonc
