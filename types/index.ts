@@ -1,3 +1,5 @@
+import { BLUR_DATA_URLS } from "@/data/blur-placeholders";
+
 export interface AbilityDetail {
   label: string;   // e.g. "施法距离", "施法时间", "持续时间", "使用次数"
   value: string;
@@ -134,12 +136,20 @@ export interface BackgroundDetail {
  *   Max size:   < 500KB (Vercel optimises automatically via next/image if used)
  */
 export const BACKGROUND_IMAGE_URLS: Record<string, string> = {
-  radiantFaith: "/assets/radiant-faith.jpg",
-  nightFaith: "/assets/night-faith.jpg",
-  destructionFaith: "/assets/destruction-faith.jpg",
-  northernFaith: "/assets/northern-faith.jpg",
-  bountyHunter: "/assets/bounty-hunter.jpg",
-  easternHero: "/assets/eastern-hero.jpg",
-  elf: "/assets/elf.jpg",
-  dragonLair: "/assets/dragon-lair.jpg",
+  radiantFaith: "/assets/radiant-faith.webp",
+  nightFaith: "/assets/night-faith.webp",
+  destructionFaith: "/assets/destruction-faith.webp",
+  northernFaith: "/assets/northern-faith.webp",
+  bountyHunter: "/assets/bounty-hunter.webp",
+  easternHero: "/assets/eastern-hero.webp",
+  elf: "/assets/elf.webp",
+  dragonLair: "/assets/dragon-lair.webp",
 };
+
+export function getBlurDataUrl(bgId: string): string {
+  const key = bgId
+    .replace(/([A-Z])/g, "-$1")
+    .toLowerCase()
+    .replace(/^-/, "");
+  return BLUR_DATA_URLS[key] || "";
+}

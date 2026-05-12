@@ -1,8 +1,13 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import IntroductionSection from "@/components/IntroductionSection";
 import Navigation from "@/components/Navigation";
-import GoldenFlameParticles from "@/components/GoldenFlameParticles";
+
+const GoldenFlameParticles = dynamic(
+  () => import("@/components/GoldenFlameParticles"),
+  { ssr: false }
+);
 
 export default function IntroPage() {
   return (

@@ -2,8 +2,13 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import CrossScarDecoration from "@/components/CrossScarDecoration";
-import GoldenFlameParticles from "@/components/GoldenFlameParticles";
+
+const GoldenFlameParticles = dynamic(
+  () => import("@/components/GoldenFlameParticles"),
+  { ssr: false }
+);
 
 export default function LandingPage() {
   return (

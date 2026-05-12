@@ -1,16 +1,34 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import dynamic from "next/dynamic";
+import Image from "next/image";
 import { gameRules, specialRulesSummary, factions } from "@/data/game-rules";
 import { backgrounds } from "@/data/backgrounds";
 import { rewardFeatsTree } from "@/data/reward-feats-tree";
 import { backgroundDetailCards } from "@/data/background-detail-cards";
-import { BACKGROUND_IMAGE_URLS, GameRule, Faction } from "@/types";
+import { BACKGROUND_IMAGE_URLS, getBlurDataUrl, GameRule, Faction } from "@/types";
 import CrossScarDecoration from "./CrossScarDecoration";
 import BackgroundSlice from "./BackgroundSlice";
-import RewardFeatsAccordion from "./RewardFeatsAccordion";
-import BackgroundDetailPanel from "./BackgroundDetailPanel";
+import SkeletonPanel from "./SkeletonPanel";
+
+const BackgroundDetailPanel = dynamic(() => import("./BackgroundDetailPanel"), {
+  loading: () => <SkeletonPanel />,
+});
+
+const RewardFeatsAccordion = dynamic(() => import("./RewardFeatsAccordion"), {
+  loading: () => (
+    <div className="mx-auto max-w-3xl space-y-3 px-6 py-12">
+      {Array.from({ length: 4 }).map((_, i) => (
+        <div
+          key={i}
+          className="h-14 animate-pulse rounded-xl border border-covenant-gold/10 bg-covenant-abyss/50"
+        />
+      ))}
+    </div>
+  ),
+});
 
 type RulesTab = "rules" | "backgrounds" | "factions" | "feats";
 
@@ -88,17 +106,24 @@ export default function RulesSection() {
             transition={{ duration: 0.8 }}
             className="fixed inset-0 z-0"
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
             {!imgError && (
-              <motion.img
-                src={bgUrl}
-                alt=""
-                className="h-full w-full object-cover"
-                loading="eager"
-                onError={() => setImgError(true)}
+              <motion.div
+                className="absolute inset-0"
                 animate={{ scale: isBgZoomed ? 1.05 : 1 }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
-              />
+              >
+                <Image
+                  src={bgUrl}
+                  alt=""
+                  fill
+                  sizes="100vw"
+                  className="object-cover"
+                  placeholder="blur"
+                  blurDataURL={selectedBg ? getBlurDataUrl(selectedBg.id) : undefined}
+                  priority
+                  onError={() => setImgError(true)}
+                />
+              </motion.div>
             )}
             <div className="absolute inset-0 bg-covenant-void/60 backdrop-blur-[1px]" />
           </motion.div>

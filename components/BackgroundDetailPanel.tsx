@@ -2,7 +2,8 @@
 
 import { useEffect, useLayoutEffect } from "react";
 import { motion } from "framer-motion";
-import { BackgroundDetail, DetailBlock, BACKGROUND_IMAGE_URLS } from "@/types";
+import Image from "next/image";
+import { BackgroundDetail, DetailBlock, BACKGROUND_IMAGE_URLS, getBlurDataUrl } from "@/types";
 
 interface BackgroundDetailPanelProps {
   detail: BackgroundDetail;
@@ -102,11 +103,14 @@ export default function BackgroundDetailPanel({
                 )`,
               }}
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src={BACKGROUND_IMAGE_URLS[bgId] || ""}
                 alt=""
-                className="h-full w-full object-contain"
+                fill
+                sizes="(max-width: 768px) 0vw, 40vw"
+                className="object-contain"
+                placeholder="blur"
+                blurDataURL={getBlurDataUrl(bgId)}
                 style={{
                   boxShadow: "inset 0 0 30px rgba(0,0,0,0.4)",
                 }}

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Cinzel, Inter } from "next/font/google";
 import LayoutWrapper from "@/components/LayoutWrapper";
 import "./globals.css";
@@ -17,6 +17,12 @@ const inter = Inter({
   weight: ["300", "400", "500", "600", "700"],
 });
 
+export const viewport: Viewport = {
+  themeColor: "#c5a059",
+  width: "device-width",
+  initialScale: 1,
+};
+
 export const metadata: Metadata = {
   title: "圣约·英雄时代 | Covenant: Age of Heroes",
   description:
@@ -31,10 +37,16 @@ export const metadata: Metadata = {
     "Age of Heroes",
     "TRPG",
   ],
+  manifest: "/manifest.json",
   openGraph: {
     title: "圣约·英雄时代 | Covenant: Age of Heroes",
     description: "探索八大背景，选择你的英雄命运",
     type: "website",
+  },
+  appleWebApp: {
+    capable: true,
+    title: "圣约·英雄时代",
+    statusBarStyle: "black-translucent",
   },
 };
 

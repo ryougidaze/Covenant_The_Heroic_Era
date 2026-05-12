@@ -1,7 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Background, BACKGROUND_IMAGE_URLS } from "@/types";
+import Image from "next/image";
+import { Background, BACKGROUND_IMAGE_URLS, getBlurDataUrl } from "@/types";
 
 interface BackgroundSliceProps {
   background: Background;
@@ -88,7 +89,7 @@ export default function BackgroundSlice({
               }}
             />
             <div
-              className="mx-auto h-full max-w-sm aspect-[2/3] overflow-hidden border border-covenant-silver/5 bg-covenant-abyss/60"
+              className="relative mx-auto h-full max-w-sm aspect-[2/3] overflow-hidden border border-covenant-silver/5 bg-covenant-abyss/60"
               style={{
                 maskImage: `linear-gradient(
                   to bottom,
@@ -110,11 +111,14 @@ export default function BackgroundSlice({
                 )`,
               }}
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src={BACKGROUND_IMAGE_URLS[background.id]}
                 alt={background.title}
-                className="h-full w-full object-cover"
+                fill
+                sizes="(max-width: 768px) 90vw, 384px"
+                className="object-cover"
+                placeholder="blur"
+                blurDataURL={getBlurDataUrl(background.id)}
                 style={{
                   boxShadow: "inset 0 0 30px rgba(0,0,0,0.4)",
                 }}
