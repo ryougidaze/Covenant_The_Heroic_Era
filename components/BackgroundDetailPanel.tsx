@@ -3,7 +3,8 @@
 import { useEffect, useLayoutEffect } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { BackgroundDetail, DetailBlock, BACKGROUND_IMAGE_URLS, getBlurDataUrl } from "@/types";
+import type { BackgroundDetail, DetailBlock } from "@/types";
+import { BACKGROUND_IMAGE_URLS, getBlurDataUrl } from "@/utils/image-urls";
 
 interface BackgroundDetailPanelProps {
   detail: BackgroundDetail;

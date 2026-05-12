@@ -1,5 +1,3 @@
-import { BLUR_DATA_URLS } from "@/data/blur-placeholders";
-
 export interface AbilityDetail {
   label: string;   // e.g. "施法距离", "施法时间", "持续时间", "使用次数"
   value: string;
@@ -111,45 +109,3 @@ export interface BackgroundDetail {
   sections: DetailSection[];
 }
 
-
-/**
- * BACKGROUND_IMAGE_URLS
- *
- * Place your background images in public/assets/ and reference them here.
- * Example: "/assets/radiant-faith.jpg" maps to public/assets/radiant-faith.jpg
- *
- * Leave as empty string "" to show only the dark ultramarine gradient.
- *
- * ── Recommended image themes ──
- *   radiantFaith     — cathedral light, stained glass, divine radiance
- *   nightFaith       — starry night, moonlit sky, celestial darkness
- *   destructionFaith — volcanic fire, ash, blazing inferno
- *   northernFaith    — aurora borealis, snow-capped mountains, frozen tundra
- *   bountyHunter     — desert wasteland, lone wanderer, dusty trail
- *   easternHero      — misty bamboo forest, ancient temple, mountain peak
- *   elf              — enchanted forest, ancient tree, dappled sunlight
- *   dragonLair       — epic mountain peak, storm clouds, dragon's keep
- *
- * ── Image requirements ──
- *   Resolution: 1920×1080 or higher (16:9)
- *   Format:     .jpg or .webp (recommended for performance)
- *   Max size:   < 500KB (Vercel optimises automatically via next/image if used)
- */
-export const BACKGROUND_IMAGE_URLS: Record<string, string> = {
-  radiantFaith: "/assets/radiant-faith.webp",
-  nightFaith: "/assets/night-faith.webp",
-  destructionFaith: "/assets/destruction-faith.webp",
-  northernFaith: "/assets/northern-faith.webp",
-  bountyHunter: "/assets/bounty-hunter.webp",
-  easternHero: "/assets/eastern-hero.webp",
-  elf: "/assets/elf.webp",
-  dragonLair: "/assets/dragon-lair.webp",
-};
-
-export function getBlurDataUrl(bgId: string): string {
-  const key = bgId
-    .replace(/([A-Z])/g, "-$1")
-    .toLowerCase()
-    .replace(/^-/, "");
-  return BLUR_DATA_URLS[key] || "";
-}

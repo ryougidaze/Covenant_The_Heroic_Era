@@ -2,7 +2,8 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { Background, BACKGROUND_IMAGE_URLS, getBlurDataUrl } from "@/types";
+import type { Background } from "@/types";
+import { BACKGROUND_IMAGE_URLS, getBlurDataUrl } from "@/utils/image-urls";
 
 interface BackgroundSliceProps {
   background: Background;

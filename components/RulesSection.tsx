@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, Suspense } from "react";
+import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import dynamic from "next/dynamic";
 import Image from "next/image";
@@ -8,7 +8,8 @@ import { gameRules, specialRulesSummary, factions } from "@/data/game-rules";
 import { backgrounds } from "@/data/backgrounds";
 import { rewardFeatsTree } from "@/data/reward-feats-tree";
 import { backgroundDetailCards } from "@/data/background-detail-cards";
-import { BACKGROUND_IMAGE_URLS, getBlurDataUrl, GameRule, Faction } from "@/types";
+import type { GameRule, Faction } from "@/types";
+import { BACKGROUND_IMAGE_URLS, getBlurDataUrl } from "@/utils/image-urls";
 import CrossScarDecoration from "./CrossScarDecoration";
 import BackgroundSlice from "./BackgroundSlice";
 import SkeletonPanel from "./SkeletonPanel";

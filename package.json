@@ -12,8 +12,6 @@
   },
   "dependencies": {
     "@serwist/next": "^9.5.11",
-    "@serwist/precaching": "^9.5.11",
-    "@serwist/sw": "^9.5.11",
     "framer-motion": "^11.0.0",
     "next": "^15.5.18",
     "react": "^19.2.6",
@@ -26,9 +24,11 @@
     "@types/react-dom": "^19.2.3",
     "autoprefixer": "^10.4.0",
     "postcss": "^8.4.0",
-    "sharp": "^0.34.5",
     "tailwindcss": "^3.4.0",
     "typescript": "^5.4.0",
     "wrangler": "^4.90.0"
+  },
+  "optionalDependencies": {
+    "sharp": "^0.34.5"
   }
 }

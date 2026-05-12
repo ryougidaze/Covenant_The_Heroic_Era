@@ -1,15 +1,18 @@
-const withSerwistInit = require("@serwist/next").default;
-
 const isDev = process.env.NODE_ENV === "development";
+const skipSerwist = isDev || !!process.env.CF_PAGES || process.env.SKIP_SERWIST === "1";
 
-const withSerwist = withSerwistInit({
-  swSrc: "app/sw.ts",
-  swDest: "public/sw.js",
-  reloadOnOnline: true,
-  register: !isDev, // SW cannot use eval() — dev mode uses eval-source-map
-  // Precache all static assets and pages for offline access
-  maximumFileSizeToCacheInBytes: 6 * 1024 * 1024, // 6MB
-});
+let withSerwist = (config) => config; // no-op by default
+
+if (!skipSerwist) {
+  const withSerwistInit = require("@serwist/next").default;
+  withSerwist = withSerwistInit({
+    swSrc: "app/sw.ts",
+    swDest: "public/sw.js",
+    reloadOnOnline: true,
+    register: !isDev,
+    maximumFileSizeToCacheInBytes: 6 * 1024 * 1024,
+  });
+}
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -27,7 +30,6 @@ const nextConfig = {
   async headers() {
     return [
       {
-        // Long cache for static assets with hashed filenames
         source: "/_next/static/(.*)",
         headers: [
           {
@@ -37,7 +39,6 @@ const nextConfig = {
         ],
       },
       {
-        // Images in public/assets
         source: "/assets/(.*\\.(?:webp|avif|jpg|jpeg|png|svg|ico))",
         headers: [
           {
@@ -47,7 +48,6 @@ const nextConfig = {
         ],
       },
       {
-        // Font files
         source: "/assets/(.*\\.(?:woff|woff2|ttf|otf|eot))",
         headers: [
           {
@@ -57,7 +57,6 @@ const nextConfig = {
         ],
       },
       {
-        // Audio files
         source: "/assets/(.*\\.(?:mp3|wav|ogg|flac))",
         headers: [
           {
@@ -67,7 +66,6 @@ const nextConfig = {
         ],
       },
       {
-        // Service worker and manifest
         source: "/(sw\\.js|manifest\\.json)",
         headers: [
           {
