@@ -44,3 +44,8 @@ picture_sucai/
 # serwist generated service worker (built at deploy time)
 public/sw.js
 public/sw.js.map
+
+# cloudflare / wrangler
+.wrangler/
+.open-next/
+.dev.vars
