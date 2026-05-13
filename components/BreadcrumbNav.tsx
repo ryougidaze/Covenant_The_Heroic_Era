@@ -9,7 +9,7 @@ interface BreadcrumbNavProps {
 
 export default function BreadcrumbNav({ href, label }: BreadcrumbNavProps) {
   return (
-    <div className="fixed left-0 right-0 top-14 z-40 px-4 pt-1 md:top-16 md:px-6 md:pt-2">
+    <div className="fixed left-0 top-0 z-40 px-4 pt-4 md:px-6 md:pt-6">
       <Link
         href={href}
         className="inline-flex items-center gap-2 rounded-full border border-covenant-silver/10 bg-covenant-void/80 px-4 py-2 text-sm shadow-lg shadow-black/20 backdrop-blur-xl transition-all hover:border-covenant-gold/25 hover:bg-covenant-void/90"
