@@ -2,15 +2,13 @@
 
 import GlobalBackground from "./GlobalBackground";
 import BgmPlayer from "./BgmPlayer";
+import Navigation from "./Navigation";
 
-export default function LayoutWrapper({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function LayoutWrapper({ children }: { children: React.ReactNode }) {
   return (
     <>
       <GlobalBackground />
+      <Navigation />
       <BgmPlayer />
       {children}
     </>
