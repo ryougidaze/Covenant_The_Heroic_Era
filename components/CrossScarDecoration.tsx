@@ -79,22 +79,6 @@ function OrnamentCross({ className }: { className?: string }) {
           animate={{ opacity: [0.2, 0.7, 0.2], scale: [0.8, 1.2, 0.8] }}
           transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
         />
-        {/* Flow particles on vertical */}
-        <motion.circle
-          r="2"
-          fill="#D4B06A"
-          initial={{ cy: 2, cx: 20 }}
-          animate={{ cy: [2, 38, 2] }}
-          transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-        />
-        {/* Flow particles on horizontal */}
-        <motion.circle
-          r="2"
-          fill="#D4B06A"
-          initial={{ cx: 2, cy: 20 }}
-          animate={{ cx: [2, 38, 2] }}
-          transition={{ duration: 4, repeat: Infinity, ease: "linear", delay: 0.8 }}
-        />
 
         <defs>
           <linearGradient id="goldGradient" x1="0" y1="0" x2="1" y2="1">
@@ -202,15 +186,6 @@ function WatermarkCross({ className }: { className?: string }) {
             opacity: [0.5, 0.8, 0.5],
           }}
           transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-        />
-        {/* Orbiting particle */}
-        <motion.div
-          className="absolute left-1/2 top-1/2 h-1 w-1 -translate-x-1/2 -translate-y-1/2 rounded-full bg-covenant-gold/60 blur-[1px]"
-          animate={{
-            scale: [0, 2, 0],
-            opacity: [0, 0.8, 0],
-          }}
-          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
         />
       </div>
     </motion.div>

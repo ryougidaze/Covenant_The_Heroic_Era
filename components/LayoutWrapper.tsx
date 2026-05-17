@@ -3,6 +3,7 @@
 import GlobalBackground from "./GlobalBackground";
 import BgmPlayer from "./BgmPlayer";
 import Navigation from "./Navigation";
+import AglaiaWidget from "./AglaiaWidget";
 
 export default function LayoutWrapper({ children }: { children: React.ReactNode }) {
   return (
@@ -10,6 +11,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
       <GlobalBackground />
       <Navigation />
       <BgmPlayer />
+      <AglaiaWidget />
       {children}
     </>
   );

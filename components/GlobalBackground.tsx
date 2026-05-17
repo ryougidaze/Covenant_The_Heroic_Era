@@ -1,22 +1,16 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
-import { motion } from "framer-motion";
-
-/**
- * GlobalBackground — 昼夜双子动态沉浸系统
- *
- * Left:  白昼与光辉 (radial gold → white gradient, breathing pulse)
- * Right: 黑夜与未来 (deep purple → void black gradient, breathing pulse)
- * Overlay: subtle noise texture for filmic grain
- * Mouse:  parallax-style微调 based on cursor position
- */
+import { useEffect, useState, useCallback, useRef } from "react";
 
 export default function GlobalBackground() {
   const [mouse, setMouse] = useState({ x: 0.5, y: 0.5 });
+  const frameRef = useRef(0);
 
   const handleMouseMove = useCallback((e: MouseEvent) => {
-    // Normalise to 0–1, throttle via rAF in the event handler
+    // Throttle to ~20fps — skip 2 out of 3 frames
+    frameRef.current = (frameRef.current + 1) % 3;
+    if (frameRef.current !== 0) return;
+
     setMouse({
       x: e.clientX / window.innerWidth,
       y: e.clientY / window.innerHeight,
@@ -24,75 +18,43 @@ export default function GlobalBackground() {
   }, []);
 
   useEffect(() => {
-    let raf: number;
-    const onMove = (e: MouseEvent) => {
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => handleMouseMove(e));
-    };
-    window.addEventListener("mousemove", onMove, { passive: true });
-    return () => {
-      window.removeEventListener("mousemove", onMove);
-      cancelAnimationFrame(raf);
-    };
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    return () => window.removeEventListener("mousemove", handleMouseMove);
   }, [handleMouseMove]);
 
-  // Map mouse X to a subtle offset range (±3% for the gradient midpoint)
-  const offsetX = (mouse.x - 0.5) * 6; // -3% → +3%
+  const offsetX = (mouse.x - 0.5) * 6;
 
   return (
     <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden="true">
-      {/* ── Left: 白昼与光辉 ── */}
-      <motion.div
-        className="absolute bottom-0 left-0 top-0 md:w-[55%] w-full md:h-full h-[45%]"
+      {/* Left: Day & Radiance */}
+      <div
+        className="absolute bottom-0 left-0 top-0 md:w-[55%] w-full md:h-full h-[45%] animate-breathe-left"
         style={{
           background: `radial-gradient(ellipse at ${50 + offsetX * 0.5}% 50%, rgba(248,250,252,0.10) 0%, rgba(197,160,89,0.06) 35%, rgba(197,160,89,0.02) 60%, transparent 85%)`,
-        }}
-        animate={{
-          opacity: [0.7, 1, 0.7],
-        }}
-        transition={{
-          duration: 12,
-          repeat: Infinity,
-          ease: "easeInOut",
+          animation: "breathe 12s ease-in-out infinite",
         }}
       />
 
-      {/* ── Center: golden thread (the boundary between day and night) ── */}
-      <motion.div
-        className="absolute left-1/2 top-0 hidden h-full w-px md:block"
+      {/* Center: golden thread */}
+      <div
+        className="absolute hidden h-full w-px md:block"
         style={{
+          left: `calc(50% + ${offsetX}%)`,
           background: `linear-gradient(180deg, transparent 5%, rgba(197,160,89,0.15) 25%, rgba(197,160,89,0.3) 50%, rgba(197,160,89,0.15) 75%, transparent 95%)`,
-          transform: `translateX(${offsetX}%)`,
-        }}
-        animate={{
-          opacity: [0.3, 0.6, 0.3],
-        }}
-        transition={{
-          duration: 15,
-          repeat: Infinity,
-          ease: "easeInOut",
-          delay: 2,
+          animation: "breathe 15s ease-in-out 2s infinite",
         }}
       />
 
-      {/* ── Right: 黑夜与未来 ── */}
-      <motion.div
+      {/* Right: Night & Void */}
+      <div
         className="absolute bottom-0 right-0 top-0 md:w-[55%] w-full md:h-full h-[55%] md:top-0 top-[45%]"
         style={{
           background: `radial-gradient(ellipse at ${50 - offsetX * 0.5}% 50%, rgba(30,27,75,0.15) 0%, rgba(15,10,40,0.10) 40%, rgba(2,6,23,0.08) 70%, transparent 90%)`,
-        }}
-        animate={{
-          opacity: [0.7, 1, 0.7],
-        }}
-        transition={{
-          duration: 14,
-          repeat: Infinity,
-          ease: "easeInOut",
-          delay: 1,
+          animation: "breathe 14s ease-in-out 1s infinite",
         }}
       />
 
-      {/* ── Noise texture overlay (filmic grain) ── */}
+      {/* Noise texture overlay */}
       <div
         className="absolute inset-0 opacity-[0.03]"
         style={{
@@ -102,13 +64,20 @@ export default function GlobalBackground() {
         }}
       />
 
-      {/* ── Vignette (dark edges for depth) ── */}
+      {/* Vignette */}
       <div
         className="absolute inset-0"
         style={{
           background: `radial-gradient(ellipse at 50% 50%, transparent 55%, rgba(2,6,23,0.35) 100%)`,
         }}
       />
+
+      <style jsx>{`
+        @keyframes breathe {
+          0%, 100% { opacity: 0.7; }
+          50% { opacity: 1; }
+        }
+      `}</style>
     </div>
   );
 }
