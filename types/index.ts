@@ -33,23 +33,6 @@ export interface Background {
   detailedContent?: string;  // full document text for the "详细信息" panel
 }
 
-// ── World Lore ──
-
-export interface LoreChapter {
-  id: string;
-  title: string;
-  subtitle?: string;
-  summary: string;
-  paragraphs: string[];
-  highlight?: string;
-}
-
-export interface LoreSection {
-  id: string;
-  title: string;
-  chapters: LoreChapter[];
-}
-
 // ── Game Rules ──
 
 export interface GameRule {

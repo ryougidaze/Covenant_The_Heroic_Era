@@ -10,7 +10,6 @@ interface FlameParticle {
   size: number;
   duration: number;
   delay: number;
-  drift: number;
   riseBy: number;
   maxOpacity: number;
 }
@@ -34,7 +33,6 @@ export default function GoldenFlameParticles({
         size: Math.random() * 2.5 + 1.5,
         duration: Math.random() * 4 + 5,
         delay: Math.random() * 6,
-        drift: (Math.random() - 0.5) * 30,
         riseBy: 60 + Math.random() * 180,
         maxOpacity: Math.random() * 0.3 + 0.08,
       });
