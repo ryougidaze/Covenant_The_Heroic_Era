@@ -6,13 +6,13 @@ export const rewardFeatsTree: FeatNode[] = [
     title: "奥秘术专长",
     subtitle: "Arcane Arts",
     description:
-      "在菲比斯帝国的东方区域，诞生了两种不同于神灵术的魔法——奥术与秘术。奥术魔法运转自然之力（火焰、雷电等元素放出）；秘术魔法运用非自然之力（召唤、诅咒、变形等）。奥秘术的本质是利用已有资源对自然或超自然提出交换。",
+      "在菲比斯帝国的东方区域，诞生了两种不同于神灵术的魔法——奥术与秘术。奥术魔法运转自然之力（火焰、雷电等元素放出）；秘术魔法运用非自然之力（召唤、诅咒、变形等）。奥秘术的本质是利用已有资源对自然或超自然提出交换。奥秘术师通常来自东方或中原地区，他们是现代科学的忠实拥护者。",
     children: [
       {
         id: "summon-1",
         title: "召唤秘术一型",
         description:
-          "你可以使用价值为200gp的宝石，一只凶兽的首级为耗材召唤一头普通召唤兽。与其签订契约后以附赠动作召唤现身。当召唤兽生命值归零时需花费一小时、消耗50金币恢复。同时最多召唤一只、契约两头，可用附赠动作切换。",
+          "你可以使用价值为200gp的宝石，一只凶兽的首级为耗材召唤一头普通召唤兽。与其签订契约后以附赠动作召唤现身，以附赠动作或反应命令其回到超域位面。当召唤兽生命值归零时需花费一小时、消耗50金币恢复。同时最多召唤一只、契约两头，可用附赠动作切换。",
         mechanics: [
           { label: "普通召唤兽 AC", value: "16" },
           { label: "HP", value: "10 × 等级" },
@@ -21,6 +21,7 @@ export const rewardFeatsTree: FeatNode[] = [
           { label: "攻击", value: "每轮两次" },
           { label: "近战", value: "2d8+4 挥砍" },
           { label: "远程", value: "2d8 穿刺" },
+          { label: "秘技次数", value: "每天一次（特性施放）" },
         ],
         children: [
           {
@@ -29,7 +30,6 @@ export const rewardFeatsTree: FeatNode[] = [
             subtitle: "Fat Chocobo",
             description:
               "特殊反应「胖胖之墙」：为自身半径60尺范围内至多3个目标附加保护，使其AC+5、豁免+5，持续至你的下一回合开始。",
-            mechanics: [{ label: "秘技", value: "每天一次" }],
           },
           {
             id: "cactuar",
@@ -37,7 +37,6 @@ export const rewardFeatsTree: FeatNode[] = [
             subtitle: "Cactuar",
             description:
               "秘技「针千本」：对自身半径15尺范围内所有敌人造成等同于自己最大生命值的真实伤害，敌人进行敏捷豁免，豁免成功伤害减半。",
-            mechanics: [{ label: "秘技", value: "每天一次" }],
           },
           {
             id: "moogle",
@@ -45,7 +44,6 @@ export const rewardFeatsTree: FeatNode[] = [
             subtitle: "Moogle",
             description:
               "秘技「莫古力激流」：以自身为起点，对宽10尺、长60尺范围内敌人造成眩目效果与8d8点光耀伤害。范围内所有敌人进行感知豁免，豁免失败陷入目盲状态一轮，豁免成功伤害减半。",
-            mechanics: [{ label: "秘技", value: "每天一次" }],
           },
         ],
       },
@@ -54,16 +52,17 @@ export const rewardFeatsTree: FeatNode[] = [
         title: "召唤秘术二型",
         prerequisite: "召唤秘术一型",
         description:
-          "你可以使用价值为500gp的宝石、一个龙族素材或恶魔素材为耗材召唤高等召唤兽。高等召唤兽具有物理抗性。生命值归零时需花费一小时并耗费100金币恢复。",
+          "你可以使用价值为500gp的宝石，一个龙族素材或恶魔素材为耗材召唤高等召唤兽。高等召唤兽具有物理抗性。生命值归零时需花费一小时并耗费100金币恢复。",
         mechanics: [
           { label: "高等召唤兽 AC", value: "18" },
-          { label: "HP", value: "10 × 等级 × 2" },
+          { label: "HP", value: "10 × 等级" },
           { label: "命中", value: "+10" },
           { label: "全豁免", value: "+5" },
           { label: "攻击", value: "每轮两次" },
           { label: "近战", value: "4d8+5 挥砍或钝击" },
           { label: "远程", value: "4d8 穿刺" },
-          { label: "秘技次数", value: "两次 / 长休" },
+          { label: "倍率", value: "攻击治疗×2 / 生命值×2" },
+          { label: "秘技次数", value: "两次 / 长休（特性施放）" },
         ],
         children: [
           {
@@ -71,14 +70,14 @@ export const rewardFeatsTree: FeatNode[] = [
             title: "芬里尔",
             subtitle: "Fenrir",
             description:
-              "寒冷、黯蚀抗性。秘技「月夜咆哮」：对60尺锥形范围内敌人造成8d8点黯蚀伤害，DC16感知豁免，豁免失败受到所有伤害且陷入一轮震慑。",
+              "寒冷、黯蚀抗性。秘技「月夜咆哮」：对60尺锥形范围内敌人造成8d8点黯蚀伤害，DC16感知豁免，豁免成功伤害减半，豁免失败受到所有伤害且陷入一轮震慑。",
           },
           {
             id: "ixion",
             title: "伊克西翁",
             subtitle: "Ixion",
             description:
-              "毒素、闪电、雷鸣抗性。秘技「天降雷光」：对面前宽10尺、长60尺范围发动落雷攻击，造成10d10点闪电伤害，DC16敏捷豁免，豁免失败陷入一轮麻痹。",
+              "毒素、闪电、雷鸣抗性。秘技「天降雷光」：对面前宽10尺、长60尺范围发动落雷攻击，造成10d10点闪电伤害，DC16敏捷豁免，豁免成功伤害减半，豁免失败陷入一轮麻痹。",
           },
           {
             id: "seraph",
@@ -86,6 +85,13 @@ export const rewardFeatsTree: FeatNode[] = [
             subtitle: "Seraph",
             description:
               "火焰、光耀抗性。秘技「天使之羽」：选择60尺内至多两个目标，恢复其8d8点生命值，或者造成8d8点光耀伤害。",
+          },
+          {
+            id: "self-destruct",
+            title: "通用秘技：自爆",
+            subtitle: "Self-Destruct",
+            description:
+              "触及5尺。召唤兽冲过去自爆，对敌人造成最多等同于其最大生命值15%的伤害（根据召唤兽剩余生命值百分比×15%来计算，向下取整）。",
           },
         ],
       },
@@ -97,10 +103,10 @@ export const rewardFeatsTree: FeatNode[] = [
           "你可以使用价值为2000gp的宝石、一颗龙心或恶魔之心召唤特等召唤兽。特等召唤兽免疫挥砍、穿刺、钝击伤害。生命值归零时需花费一小时并耗费400金币恢复。",
         mechanics: [
           { label: "特等召唤兽 AC", value: "22" },
-          { label: "HP", value: "10 × 等级 × 3" },
+          { label: "HP", value: "10 × 等级" },
           { label: "命中", value: "+12" },
           { label: "全豁免", value: "+7" },
-          { label: "攻击倍率", value: "×3" },
+          { label: "倍率", value: "攻击×3 / 生命值×3" },
           { label: "穿透", value: "无视抗性，免疫视为抗性" },
         ],
         children: [
@@ -132,7 +138,7 @@ export const rewardFeatsTree: FeatNode[] = [
         title: "泛用魔法公式",
         subtitle: "Generic Arcane Formulas",
         description:
-          "你获得4枚泛用公式骰，每次使用泛用公式消耗1枚，每轮最多使用2枚。泛用公式骰在长休后恢复。",
+          "你学会以下泛用公式，获得4枚泛用公式骰，每次使用泛用公式消耗1枚，每轮最多使用2枚。泛用公式骰在长休后恢复。",
         children: [
           {
             id: "chain-cast",
@@ -145,7 +151,7 @@ export const rewardFeatsTree: FeatNode[] = [
             id: "focus",
             title: "集束",
             description:
-              "若法术类型为塑能法术且作用区域为范围，可以使法术作用半径减少1/4，并令法术造成的所有伤害集中至法术范围内的单个目标，但最终伤害减半。",
+              "若法术类型为塑能法术且作用区域为范围，可以使法术作用半径减少1/4，并令法术造成的所有伤害（豁免判定前的结果）集中至法术范围内的单个目标，但最终伤害减半。",
           },
           {
             id: "pierce",
@@ -167,7 +173,7 @@ export const rewardFeatsTree: FeatNode[] = [
         subtitle: "Specialized Arcane Formulas",
         prerequisite: "泛用魔法公式",
         description:
-          "卢修斯·绮晓，这位卓越的奥术天才在18岁时根据泛用公式发明了特化公式。特化公式能够与泛用公式同时使用。你获得4枚特化公式骰，每次使用消耗一枚，每轮最多使用2枚，长休后恢复。",
+          "卢修斯·绮晓，这位卓越的奥术天才在18岁时根据泛用公式发明了特化公式。特化公式能够与泛用公式同时使用，这使得奥秘术施法者的施法能力进一步增强。你学会以下特化公式，获得4枚特化公式骰，每次使用消耗一枚，每轮最多使用2枚，长休后恢复。",
         children: [
           {
             id: "lock-on",
@@ -209,7 +215,7 @@ export const rewardFeatsTree: FeatNode[] = [
         title: "龙戟精通",
         subtitle: "Dragon Halberd Mastery",
         description:
-          "龙戟是北方军队最常用的制式武器，共有四个部分，都是模仿巨龙的攻击而设计的——由白钢打造的枪杆是龙脊，枪尖是龙牙，枪尖侧部的半月形刀刃是龙爪，而枪尾的钝器配重是龙尾。",
+          "龙戟是北方军队最常用的制式武器，共有四个部分，都是模仿巨龙的攻击而设计的——由白钢打造的枪杆是龙脊，枪尖是龙牙，枪尖侧部的半月形刀刃是龙爪，而枪尾的钝器配重是龙尾。你获得北方骑士专用武器「龙戟」的精通，并且能够以300gp购买一支龙戟。",
         mechanics: [
           { label: "武器类型", value: "双手 · 重型 · 10尺触及" },
           { label: "主属性", value: "力量 或 敏捷" },
@@ -226,7 +232,7 @@ export const rewardFeatsTree: FeatNode[] = [
         subtitle: "Dragon Armor Mastery",
         prerequisite: "龙戟精通",
         description:
-          "龙铠最初设计给北方最强大的骑士们用来配合与巨龙的合作战斗。甲胄虽沉重却相当灵活，关节各处设计出龙牙般的尖刺——对巨龙如鹅毛柔软，对寻常生物却危险十足。",
+          "龙铠最初设计给北方最强大的骑士们用来配合与巨龙的合作战斗。甲胄虽沉重却相当灵活，能够让骑士们利用更夸张的姿势做出更好的跳跃。同时，为了防止受到束缚，龙铠还在关节各处设计出了龙牙般的尖刺造型——这种尖刺对巨龙的鳞片来说就像鹅毛般柔软，但对寻常的生物却危险十足。你获得北方骑士专用铠甲「龙铠」的精通，并且能够以2000gp购买一套龙铠。",
         mechanics: [
           { label: "护甲类型", value: "重甲" },
           { label: "AC", value: "19" },
@@ -253,7 +259,7 @@ export const rewardFeatsTree: FeatNode[] = [
         title: "塔弓精通",
         subtitle: "Tower Bow Mastery",
         description:
-          "为了对抗西部地区的烈风，西方的战士们设计出了一种更加坚实的长弓。它有近七尺长，在弓梢处增加了金属传动部件。这种重型弓虽然让射手的移动变得不便，但它所射出的箭矢甚至可以破坏城墙，因此被称为塔弓。",
+          "为了对抗西部地区的烈风，西方的战士们设计出了一种更加坚实的长弓。它有近七尺长，在弓梢处增加了金属传动部件。这种重型弓虽然让射手的移动变得不便，但它所射出的箭矢甚至可以破坏城墙，因此被称为塔弓。你获得西方骑士专用武器「塔弓」的精通，并且能够以300gp购买一支塔弓。",
         mechanics: [
           { label: "武器类型", value: "双手 · 重型" },
           { label: "射程", value: "160 / 700尺" },
@@ -262,7 +268,7 @@ export const rewardFeatsTree: FeatNode[] = [
           { label: "伤害类型", value: "穿刺" },
           { label: "价格", value: "300 gp" },
           { label: "精通·近射", value: "5尺内射击不陷入劣势且获得优势（视为近战攻击）" },
-          { label: "精通·贯穿重射", value: "可对目标20尺内另一目标擦伤1d6+调整值" },
+          { label: "精通·贯穿重射", value: "箭矢可对目标20尺内另一目标擦伤1d6+调整值" },
         ],
       },
       {
@@ -271,13 +277,14 @@ export const rewardFeatsTree: FeatNode[] = [
         subtitle: "White Feather Arrows",
         prerequisite: "塔弓精通",
         description:
-          "你获得西方骑士专用弹药「长翎白羽箭」的精通。箭矢射出后即被消耗，只能以塔弓射出。",
+          "你获得西方骑士专用弹药「长翎白羽箭」的精通，并且能够以10gp/支的价格购买该类箭矢。箭矢射出后即被消耗，只能以塔弓射出。",
         mechanics: [
           { label: "弹药类型", value: "重型箭矢（仅塔弓）" },
           { label: "价格", value: "10 gp / 支" },
           { label: "中小型目标", value: "额外 1d6 力场伤害" },
           { label: "大型目标", value: "额外 2d6 力场伤害" },
           { label: "巨型目标", value: "额外 3d6 力场伤害" },
+          { label: "超巨型目标", value: "额外 4d6 力场伤害" },
         ],
       },
     ],
@@ -328,10 +335,11 @@ export const rewardFeatsTree: FeatNode[] = [
         title: "一心多用",
         subtitle: "Dual Concentration",
         description:
-          "你可以同时维持两个法术的专注，并且你每轮最多失去对一个法术的专注，失去的专注由你来选择。",
+          "你最多可以同时保持两个法术的专注，并且你每轮最多失去对一个法术的专注，失去的专注由你来选择。你的专注豁免DC至多不超过30。",
         mechanics: [
           { label: "专注上限", value: "同时维持两个法术" },
           { label: "失去控制", value: "每轮最多失去一个专注（自行选择）" },
+          { label: "豁免DC上限", value: "不超过30" },
         ],
       },
       {
@@ -339,9 +347,9 @@ export const rewardFeatsTree: FeatNode[] = [
         title: "生命祈唤",
         subtitle: "Life Invocation",
         description:
-          "即便你在一回合的行动中使用动作进行了治疗以外的行为（如使用环位施法命令术），你依然可以利用附赠动作使用环位施放治疗类法术。施放治疗法术时，你所造成的回复量翻倍。",
+          "你可以忽视环位消耗限制，利用附赠动作施放所有释放时间小于等于十分钟的治疗类法术。施放治疗法术时，你所造成的回复量翻倍。",
         mechanics: [
-          { label: "效果", value: "可使用附赠动作施放治疗法术" },
+          { label: "效果", value: "附赠动作施放治疗法术（≤10分钟）" },
           { label: "回复加成", value: "治疗量 ×2" },
         ],
       },
@@ -360,15 +368,15 @@ export const rewardFeatsTree: FeatNode[] = [
         subtitle: "Little Li's Flying Dagger",
         prerequisite: "东洲侠客 · 金刚境",
         description:
-          "你习得江湖绝技小李飞刀，你的敏捷属性上限变为22。每天你可以准备等同于敏捷调整值数量的小李飞刀。",
+          "你习得江湖绝技小李飞刀，你的敏捷属性上限变为22。每天你可以准备等同于敏捷调整值数量的小李飞刀，每天可以使用两次探花步。",
         mechanics: [
           { label: "敏捷上限", value: "22" },
           { label: "飞刀数量", value: "敏捷调整值 / 天" },
-          { label: "飞刀射程", value: "60尺" },
-          { label: "飞刀附魔", value: "+2 灵巧武器" },
-          { label: "飞刀伤害", value: "2d10" },
-          { label: "飞刀重击", value: "自然19-20" },
-          { label: "反击恢复", value: "恢复等同于飞刀伤害的生命值" },
+          { label: "小李飞刀射程", value: "60尺" },
+          { label: "小李飞刀附魔", value: "+2 灵巧武器" },
+          { label: "小李飞刀伤害", value: "2d10" },
+          { label: "小李飞刀重击", value: "自然19-20" },
+          { label: "小李飞刀反击恢复", value: "恢复等同于飞刀伤害的生命值" },
         ],
         children: [
           {
@@ -376,7 +384,7 @@ export const rewardFeatsTree: FeatNode[] = [
             title: "探花步",
             subtitle: "Flower-Seeking Step",
             description:
-              "每天可使用两次。当你被攻击命中时可以施展探花步躲避攻击：AC获得等同于敏捷调整值的加值（持续到下回合开始）。若使用探花步避开攻击，则可立即使用小李飞刀进行反击，一次反击中可掷出任意数量的飞刀直到全部消耗。",
+              "每天可使用两次，以一个反应施展。当你被攻击命中时可以施展探花步躲避攻击：AC获得等同于敏捷调整值的加值（持续到下回合开始）。若使用探花步避开攻击，则可立即使用小李飞刀进行反击，一次反击中可掷出任意数量的飞刀直到全部消耗。",
             mechanics: [
               { label: "使用次数", value: "2次 / 天" },
               { label: "施法时间", value: "1反应" },
@@ -389,15 +397,13 @@ export const rewardFeatsTree: FeatNode[] = [
         id: "sunflower-manual",
         title: "葵花宝典",
         subtitle: "Sunflower Manual",
-        prerequisite: "欲练此功，必先自宫",
+        prerequisite: "欲练此功，必先自宫，断情绝性，了却尘缘",
         description:
-          "时至今日，葵花宝典已经不再是武林中的秘密——只要十两银子就能在任何一位说书人手中买到一份正版。只不过整个江湖中依然极少有人修炼这份神功，因为所需付出的代价过于沉重。",
+          "时至今日，葵花宝典已经不再是武林中的秘密——只要十两银子就能在任何一位说书人手中买到一份正版。只不过整个江湖中依然极少有人修炼这份神功，因为所需付出的代价过于沉重。修炼后，你再不能产生世俗的欲望，你的全身家当不能超过100金币。",
         mechanics: [
           { label: "资产限制", value: "全身家当不能超过100金币" },
           { label: "体质", value: "永久降低至9（不可提升）" },
           { label: "属性上限", value: "六维上限提升至24" },
-          { label: "基础AC", value: "10 + 力敏智感魅调整值（未着甲时）" },
-          { label: "物理抗性", value: "非魔法钝击/挥砍/穿刺" },
         ],
         children: [
           {
@@ -409,17 +415,38 @@ export const rewardFeatsTree: FeatNode[] = [
           },
           {
             id: "sunflower-layer2",
-            title: "第二层 · 身外金身",
+            title: "真气护体",
             description:
-              "你将被自己遗弃的「珍视之物」变为一件需要同调的奇物装备。该装备具有三点充能，每天恢复三点充能。消耗1充能：将一次劣势变为均势；消耗2充能：进行死亡豁免时恢复1点生命值并立即恢复意识。",
-            mechanics: [{ label: "领悟值", value: "30点" }, { label: "充能", value: "3点/天" }],
+              "当你未着装护甲与盾牌时，你的基础AC = 10 + 力量、敏捷、智力、感知、魅力调整值，你可以将你的敏捷调整值作为加值加在豁免结果上。你获得非魔法性的钝击、挥砍、穿刺伤害抗性。",
+            mechanics: [{ label: "领悟值", value: "20点" }, { label: "AC", value: "10+五维调整值" }, { label: "物理抗性", value: "非魔法钝击/挥砍/穿刺" }],
           },
           {
             id: "sunflower-layer3",
-            title: "第三层 · 人剑合一",
+            title: "真气化刃",
             description:
-              "你可以用意念操纵你的「身外金身」进行攻击，身外金身可在你周身30尺范围内活动，并且每轮进行至多一次攻击，它的攻击等同于你的普通攻击。",
-            mechanics: [{ label: "领悟值", value: "50点" }, { label: "范围", value: "30尺" }, { label: "攻击", value: "等同于普通攻击" }],
+              "你可以用真气模仿任何你熟练或精通的武器，真气武器视为武器附魔+3武器，真气武器的伤害类型为力场伤害。",
+            mechanics: [{ label: "领悟值", value: "30点" }, { label: "附魔", value: "+3" }, { label: "伤害类型", value: "力场" }],
+          },
+          {
+            id: "sunflower-layer4",
+            title: "真气外放",
+            description:
+              "你可以利用真气强化施法，你的法术命中和法术DC+3。",
+            mechanics: [{ label: "领悟值", value: "40点" }, { label: "法术命中", value: "+3" }, { label: "法术DC", value: "+3" }],
+          },
+          {
+            id: "sunflower-layer5",
+            title: "身外金身",
+            description:
+              "你将被自己遗弃的「珍视之物」变为一件需要同调的奇物装备。该装备具有三点充能，每天恢复三点充能。消耗1充能：将一次劣势变为均势；消耗2充能：进行死亡豁免时恢复1点生命值并立即恢复意识。",
+            mechanics: [{ label: "领悟值", value: "50点" }, { label: "充能", value: "3点/天" }],
+          },
+          {
+            id: "sunflower-layer6",
+            title: "人剑合一",
+            description:
+              "你可以用意念操纵你的「身外金身」进行攻击，身外金身可在你周身30尺范围内活动，并且每轮进行至多一次近战攻击，它的攻击等同于你的普通攻击。",
+            mechanics: [{ label: "领悟值", value: "60点" }, { label: "范围", value: "30尺" }, { label: "攻击", value: "等同于普通攻击" }],
           },
         ],
       },
