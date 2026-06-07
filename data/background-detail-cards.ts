@@ -210,7 +210,7 @@ export const backgroundDetailCards: BackgroundDetail[] = [
           { type: "feature", level: 7, title: "坠星冲", action: "附赠动作", usage: "每天两次", text: "指定60尺范围内一处，对其半径15尺范围造成等级×d10点魔法穿刺伤害。在腾龙状态下施展伤害翻倍。长休恢复。", highlights: ["d10", "60尺", "翻倍"] },
           { type: "feature", level: 7, title: "成长1 · 少年龙", action: "被动", usage: "永久", text: "龙族伙伴成长为少年，生命值倍率变为3，伤害倍率变为3，AC18，命中+10。40尺爬行/飞行距离。可驾乘。吐息范围30尺。", highlights: ["×3倍率", "40尺飞行", "AC18"] },
           { type: "feature", level: 8, title: "天龙点睛", action: "动作", usage: "每天一次", text: "龙血之力爆发，对自身10尺宽、60尺长范围造成战斗轮数×d8点百分比伤害。范围内敌对目标进行DC14命运豁免，豁免成功伤害减半。长休恢复。", highlights: ["10×60尺", "d8百分比", "DC14"] },
-          { type: "feature", level: 11, title: "成长2 · 青年龙", action: "被动", usage: "永久", text: "龙族伙伴成长为青年，生命值倍率变为5，伤害骰变为3d10，伤害倍率变为5，AC22，命中+14。60尺爬行距离与120尺飞行距离。吐息范围60尺。", highlights: ["×5倍率", "3d10", "120尺飞行"] },
+          { type: "feature", level: 11, title: "成长2 · 青年龙", action: "被动", usage: "永久", text: "龙族伙伴成长为青年，生命值倍率变为5，伤害倍率变为5，AC22，命中+14。60尺爬行距离与120尺飞行距离。吐息范围60尺。", highlights: ["×5倍率", "120尺飞行"] },
           { type: "feature", level: 11, title: "青年龙额外攻击", action: "被动", usage: "永久", text: "你的龙族伙伴在自己回合内执行攻击动作时可以发动三次攻击而非两次。" },
           { type: "feature", level: 13, title: "天穹破碎", action: "附赠动作", usage: "每天一次", text: "指定120尺半径20尺范围造成等级×d10点魔法穿刺伤害。腾龙状态下伤害翻倍。同时为自己附加等级×d10点临时生命。长休恢复。", highlights: ["d10", "120尺", "翻倍"] },
           { type: "feature", level: 16, title: "成长3 · 成年龙", action: "被动", usage: "永久", text: "龙族伙伴成年，生命值倍率变为10，伤害倍率变为10，每天拥有1次传奇抗性。" },
